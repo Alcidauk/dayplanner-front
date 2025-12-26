@@ -5,9 +5,12 @@ import styles from "@/styles/styles";
 export default function Index() {
     return (
         <View style={styles.container}>
-            <Text>Dayplanner Front</Text>
+            <Text style={styles.title}>Dayplanner Front</Text>
             <Link href="/about" style={styles.button}>
                 Go to About screen
+            </Link>
+            <Link href="/register" style={styles.button}>
+                Go to Register screen
             </Link>
         </View>
     );
