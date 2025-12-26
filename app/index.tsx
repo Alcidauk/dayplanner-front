@@ -18,9 +18,13 @@ export default function Index() {
             <Link href="/register" style={styles.link}>
                 Go to Register screen
             </Link>
-            <Link href="/activity-screen" style={styles.link}>
+            <Link href="/user-info" style={styles.link}>
+                Go to User Info screen
+            </Link>
+            <Link href="/activities" style={styles.link}>
                 Go to Activity screen
             </Link>
+
             <Button title="Se connecter avec Google" onPress={handleGoogleLogin} />
         </View>
     );

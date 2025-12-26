@@ -4,7 +4,7 @@ import { getActivities } from "@/api/activityApi";
 import styles from "@/styles/styles"
 import {showAlert} from "@/utils/utils";
 
-export default function ActivityScreen() {
+export default function Activities() {
     const [activities, setActivities] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
