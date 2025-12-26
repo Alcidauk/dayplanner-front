@@ -1,6 +1,12 @@
-import { Text, View } from "react-native";
+import {Text, View, Button, Linking} from "react-native";
 import { Link } from 'expo-router';
 import styles from "@/styles/styles";
+import {API_URL} from "@/constants/constants";
+
+const handleGoogleLogin = async () => {
+    const url = `${API_URL}/auth/google/login`;
+    await Linking.openURL(url);
+};
 
 export default function Index() {
     return (
@@ -12,6 +18,7 @@ export default function Index() {
             <Link href="/register" style={styles.link}>
                 Go to Register screen
             </Link>
+            <Button title="Se connecter avec Google" onPress={handleGoogleLogin} />
         </View>
     );
 }

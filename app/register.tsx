@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { View, Text, TextInput, Button, Alert, Platform } from "react-native";
+import { View, Text, TextInput, Button, Alert } from "react-native";
 import { createUser } from "@/api/userApi";
 import { Link } from "expo-router";
 import axios from "axios";
 import styles from "@/styles/styles";
+
+import {showAlert} from "@/utils/utils";
 
 export default function RegisterScreen() {
     const [name, setName] = useState("");
@@ -12,17 +14,11 @@ export default function RegisterScreen() {
     const [loading, setLoading] = useState(false);
 
 
-    const showAlert = (title: string, message: string) => {
-        if (Platform.OS === "web") {
-            window.alert(`${title}\n${message}`);
-        } else {
-            Alert.alert(title, message);
-        }
-    };
+
 
     const handleRegister = async () => {
         if (!name || !surname || !email) {
-            Alert.alert("Erreur", "Tous les champs sont obligatoires");
+            showAlert("Erreur", "Tous les champs sont obligatoires");
             return;
         }
 
@@ -32,7 +28,6 @@ export default function RegisterScreen() {
             const user = await createUser({ name, surname, email });
             console.log("USER RETOUR API:", user);
 
-            // setTimeout pour forcer l'affichage sur le thread UI
             setTimeout(() => {
                 showAlert("Succès", `Compte créé pour ${user.email}`);
             }, 0);
