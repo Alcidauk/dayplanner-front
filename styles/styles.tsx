@@ -25,6 +25,29 @@ const styles = StyleSheet.create({
     link: {
         color: "blue",
         marginBottom: 20,
-    }
+    },
+    card: {
+        backgroundColor: "#fff",
+        padding: 16,
+        borderRadius: 10,
+        marginBottom: 12,
+        shadowColor: "#000",
+        shadowOpacity: 0.05,
+        shadowRadius: 4,
+        elevation: 2,
+    },
+    cardTitle: {
+        fontSize: 16,
+        fontWeight: "600",
+    },
+    cardDescription: {
+        marginTop: 6,
+        color: "#555",
+    },
+    cardMeta: {
+        marginTop: 8,
+        fontSize: 12,
+        color: "#888",
+    },
 });
 export default styles
