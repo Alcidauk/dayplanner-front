@@ -5,9 +5,11 @@ import styles from "@/styles/styles";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {showAlert} from "@/utils/utils";
 
-const storeToken = async (token: string) => {
+const storeToken = async (token: string | string[]) => {
     try {
-        await AsyncStorage.setItem("jwt", token);
+        if (typeof token === "string") {
+            await AsyncStorage.setItem("jwt", token);
+        }
         console.log("Token stocké sur mobile !");
     } catch (error) {
         console.error("Erreur stockage token :", error);
@@ -22,21 +24,22 @@ export default function GoogleCallback() {
         const token : string | string[] = params.token;
         if (token) {
             if (typeof window !== "undefined") {
-                localStorage.setItem("jwt", token); // web
+                if (typeof token === "string") {
+                    localStorage.setItem("jwt", token);
+                } // web
             }
 
             storeToken(token); // Mobile
 
-            // Alert cross-platform
             showAlert("Succès", "Connexion Google réussie !");
 
             const timer = setTimeout(() => {
-                router.replace("/"); // ← remplace la route
+                router.replace("/");
             }, 50);
         } else {
             showAlert("Erreur", "Token manquant !");
         }
-    }, []); // useEffect unique
+    }, []);
 
     return (
         <View style={styles.container}>
