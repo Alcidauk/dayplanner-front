@@ -21,6 +21,10 @@ const styles = StyleSheet.create({
         padding: 12,
         marginBottom: 12,
         borderRadius: 6,
+    },
+    link: {
+        color: "blue",
+        marginBottom: 20,
     }
 });
 export default styles

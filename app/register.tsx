@@ -1,14 +1,24 @@
 import { useState } from "react";
-import { View, Text, TextInput, Button, Alert } from "react-native";
+import { View, Text, TextInput, Button, Alert, Platform } from "react-native";
 import { createUser } from "@/api/userApi";
+import { Link } from "expo-router";
+import axios from "axios";
 import styles from "@/styles/styles";
-import {Link} from "expo-router";
 
-export default function Register() {
+export default function RegisterScreen() {
     const [name, setName] = useState("");
     const [surname, setSurname] = useState("");
     const [email, setEmail] = useState("");
     const [loading, setLoading] = useState(false);
+
+
+    const showAlert = (title: string, message: string) => {
+        if (Platform.OS === "web") {
+            window.alert(`${title}\n${message}`);
+        } else {
+            Alert.alert(title, message);
+        }
+    };
 
     const handleRegister = async () => {
         if (!name || !surname || !email) {
@@ -20,12 +30,20 @@ export default function Register() {
 
         try {
             const user = await createUser({ name, surname, email });
-            Alert.alert("Succès", `Compte créé pour ${user.email}`);
-        } catch (error) {
-            if (error.response) {
-                Alert.alert("Erreur", error.response.data.detail);
+            console.log("USER RETOUR API:", user);
+
+            // setTimeout pour forcer l'affichage sur le thread UI
+            setTimeout(() => {
+                showAlert("Succès", `Compte créé pour ${user.email}`);
+            }, 0);
+
+        } catch (error: unknown) {
+            console.log("ERROR:", error);
+
+            if (axios.isAxiosError(error)) {
+                showAlert("Erreur", error.response?.data?.detail ?? "Erreur serveur");
             } else {
-                Alert.alert("Erreur", "Impossible de contacter le serveur");
+                showAlert("Erreur", "Erreur inconnue");
             }
         } finally {
             setLoading(false);
@@ -34,9 +52,10 @@ export default function Register() {
 
     return (
         <View style={styles.container}>
-            <Link href="/" style={styles.button}>
+            <Link href="/" style={styles.link}>
                 Go to Home screen
             </Link>
+
             <Text style={styles.title}>Créer un compte</Text>
 
             <TextInput
@@ -70,4 +89,3 @@ export default function Register() {
         </View>
     );
 }
-
