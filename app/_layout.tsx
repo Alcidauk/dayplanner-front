@@ -7,7 +7,7 @@ export default function RootLayout() {
           <Stack.Screen name="about" options={{ title: 'About' }} />
           <Stack.Screen name="register" options={{ title: 'Register' }} />
           <Stack.Screen name="google-callback" options={{ title: 'Google-callback' }} />
-          <Stack.Screen name="activity-screen" options={{ title: 'Activity-screen' }} />
+          <Stack.Screen name="activities" options={{ title: 'Activities' }} />
       </Stack>
   );
 }
