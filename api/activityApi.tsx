@@ -1,24 +1,11 @@
-import axios from "axios";
-import { API_URL } from "@/constants/constants";
-
-export interface Activity {
-    id: number;
-    title: string;
-    description: string;
-    location: string;
-    duration: string;
-}
-
-export interface ActivityListResponse {
-    activities: Activity[];
-}
+import { apiClient, authHeaders } from "./apiClient";
+import { ActivityListResponse } from "./types";
 
 export const getActivities = async (token: string) => {
-    const response = await axios.get(`${API_URL}/activity/activities`, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    });
+    const response = await apiClient.get<ActivityListResponse>(
+        "/activity/activities",
+        authHeaders(token)
+    );
 
-    return response.data;
+    return response.data.activities;
 };

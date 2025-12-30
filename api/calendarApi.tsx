@@ -1,20 +1,11 @@
-import axios from "axios";
-import { API_URL } from "@/constants/constants";
-
-export interface CalendarEvent {
-    id: string;
-    title: string;
-    start: string;
-    end: string;
-    location?: string;
-}
+import { apiClient, authHeaders } from "./apiClient";
+import { CalendarEvent } from "./types";
 
 export const getCalendarEvents = async (token: string) => {
-    const response = await axios.get(`${API_URL}/google_calendar/events`, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    });
+    const response = await apiClient.get<{ events: CalendarEvent[] }>(
+        "/google_calendar/events",
+        authHeaders(token)
+    );
 
-    return response.data.events as CalendarEvent[];
+    return response.data.events;
 };
