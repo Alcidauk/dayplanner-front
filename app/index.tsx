@@ -24,6 +24,9 @@ export default function Index() {
             <Link href="/activities" style={styles.link}>
                 Go to Activity screen
             </Link>
+            <Link href="/google-calendar" style={styles.link}>
+                Go to Google Calendar screen
+            </Link>
 
             <Button title="Se connecter avec Google" onPress={handleGoogleLogin} />
         </View>

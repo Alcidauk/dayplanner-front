@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { View, Text, FlatList, ActivityIndicator } from "react-native";
-import { getActivities } from "@/api/activityApi";
+import {Activity, getActivities} from "@/api/activityApi";
 import styles from "@/styles/styles"
 import {showAlert} from "@/utils/utils";
 
 export default function Activities() {
-    const [activities, setActivities] = useState<any[]>([]);
+    const [activities, setActivities] = useState<Activity[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -23,10 +23,7 @@ export default function Activities() {
                 const response = await getActivities(token);
                 console.log("Réponse brute API :", response);
 
-                // 🧠 GPT renvoie du JSON sous forme de string
-                const parsed = JSON.parse(response.activities);
-
-                setActivities(parsed.activities ?? []);
+                setActivities(response.activities ?? []);
             } catch (error) {
                 console.error(error);
                 showAlert("Erreur", "Impossible de charger les activités");
@@ -60,6 +57,9 @@ export default function Activities() {
                         <Text style={styles.cardDescription}>{item.description}</Text>
                         {item.duration && (
                             <Text style={styles.cardMeta}> {item.duration}</Text>
+                        )}
+                        {item.location && (
+                            <Text style={styles.cardMeta}> {item.location}</Text>
                         )}
                     </View>
                 )}

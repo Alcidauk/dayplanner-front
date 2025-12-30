@@ -49,5 +49,25 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: "#888",
     },
+    rowHeader: {
+            flexDirection: "row",
+            backgroundColor: "#eee",
+            paddingVertical: 10,
+        },
+        row: {
+            flexDirection: "row",
+            paddingVertical: 10,
+            borderBottomWidth: 1,
+            borderColor: "#ddd",
+        },
+        cell: {
+            flex: 1,
+            paddingHorizontal: 8,
+            fontSize: 12,
+        },
+        header: {
+            fontWeight: "bold",
+        }
+
 });
 export default styles
