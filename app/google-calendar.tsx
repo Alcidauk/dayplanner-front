@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { View, Text, FlatList, ActivityIndicator } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getCalendarEvents, CalendarEvent } from "@/api/calendarApi";
+import { getCalendarEvents } from "@/api/calendarApi";
 import styles from "@/styles/styles";
+import {CalendarEvent} from "@/api/types";
 
 export default function CalendarScreen() {
     const [events, setEvents] = useState<CalendarEvent[]>([]);

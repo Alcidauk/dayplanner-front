@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { View, Text, FlatList, ActivityIndicator } from "react-native";
-import {Activity, getActivities} from "@/api/activityApi";
+import {getActivities} from "@/api/activityApi";
 import styles from "@/styles/styles"
 import {showAlert} from "@/utils/utils";
+import {Activity} from "@/api/types";
 
 export default function Activities() {
     const [activities, setActivities] = useState<Activity[]>([]);
@@ -23,7 +24,7 @@ export default function Activities() {
                 const response = await getActivities(token);
                 console.log("Réponse brute API :", response);
 
-                setActivities(response.activities ?? []);
+                setActivities(response ?? []);
             } catch (error) {
                 console.error(error);
                 showAlert("Erreur", "Impossible de charger les activités");

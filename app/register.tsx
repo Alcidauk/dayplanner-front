@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, Text, TextInput, Button, Alert } from "react-native";
+import { View, Text, TextInput, Button } from "react-native";
 import { createUser } from "@/api/userApi";
 import { Link } from "expo-router";
 import axios from "axios";
