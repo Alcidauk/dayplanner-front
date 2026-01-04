@@ -1,14 +1,13 @@
-import { Stack, Slot } from "expo-router";
+import { Stack } from "expo-router";
 
 export default function RootLayout() {
-  return (
-      <Stack>
-          <Stack.Screen name="index" options={{ title: 'Home' }} />
-          <Stack.Screen name="about" options={{ title: 'About' }} />
-          <Stack.Screen name="register" options={{ title: 'Register' }} />
-          <Stack.Screen name="google-callback" options={{ title: 'Google-callback' }} />
-          <Stack.Screen name="google-calendar" options={{ title: 'Google-calendar' }} />
-          <Stack.Screen name="activities" options={{ title: 'Activities' }} />
-      </Stack>
-  );
+    return (
+        <Stack>
+            {/* Tabs */}
+            <Stack.Screen
+                name="(tabs)"
+                options={{ headerShown: false }}
+            />
+        </Stack>
+    );
 }

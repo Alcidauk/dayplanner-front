@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { View, Text, TextInput, Button } from "react-native";
 import { createUser } from "@/api/userApi";
-import { Link } from "expo-router";
 import axios from "axios";
 import styles from "@/styles/styles";
 
@@ -47,9 +46,6 @@ export default function RegisterScreen() {
 
     return (
         <View style={styles.container}>
-            <Link href="/" style={styles.link}>
-                Go to Home screen
-            </Link>
 
             <Text style={styles.title}>Créer un compte</Text>
 
