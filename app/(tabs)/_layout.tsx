@@ -28,6 +28,7 @@ export default function TabsLayout() {
 
     return (
         <TopTabs.Navigator
+            key={isAuthenticated ? "auth" : "noauth"}
             screenOptions={{
                 lazy: true,
                 tabBarIndicatorStyle: {backgroundColor: "#000"},

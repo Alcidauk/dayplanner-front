@@ -8,16 +8,13 @@ export const useAuth = () => {
 
     const checkToken = async () => {
         const tokenWeb = typeof window !== "undefined" ? localStorage.getItem("jwt") : null;
-        const tokenMobile = await AsyncStorage.getItem("jwt");
+        const tokenMobile = typeof window === "undefined" ? await AsyncStorage.getItem("jwt") : null;
         const token = tokenWeb || tokenMobile;
         setIsAuthenticated(!!token);
     };
 
     useEffect(() => {
-        // Check au montage
         checkToken();
-
-        // Écoute les changements d’auth
         const listener = () => checkToken();
         authEmitter.on("authChanged", listener);
 

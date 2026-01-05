@@ -10,10 +10,14 @@ export default function LogoutScreen() {
     useEffect(() => {
         const logout = async () => {
             try {
-                const token = await AsyncStorage.getItem("jwt");
+                const tokenWeb = typeof window !== "undefined" ? localStorage.getItem("jwt") : null;
+                const tokenMobile = typeof window === "undefined" ? await AsyncStorage.getItem("jwt") : null;
+                const token = tokenWeb || tokenMobile;
 
                 if (token) {
                     await apiClient.post(`${API_URL}/auth/logout`, {}, authHeaders(token));
+                    await AsyncStorage.removeItem("jwt");
+                    if (typeof window !== "undefined") localStorage.removeItem("jwt");
                     authEmitter.emit("authChanged");
                     router.replace("/");
                 }
