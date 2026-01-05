@@ -11,6 +11,7 @@ export default function TabsLayout() {
     return (
         <MaterialTopTabs
             screenOptions={{
+                lazy: true,
                 tabBarIndicatorStyle: { backgroundColor: "#000" },
                 tabBarStyle: { backgroundColor: "#fff" },
                 tabBarLabelStyle: { fontWeight: "600" },
@@ -40,6 +41,10 @@ export default function TabsLayout() {
             <MaterialTopTabs.Screen
                 name="about"
                 options={{ title: "About" }}
+            />
+            <MaterialTopTabs.Screen
+                name="logout"
+                options={{ title: "Logout" }}
             />
         </MaterialTopTabs>
     );
