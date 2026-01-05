@@ -1,15 +1,13 @@
 import { useState } from "react";
 import { Text, TextInput, Button, ScrollView } from "react-native";
 import { addUserInfo } from "@/api/userInfoApi";
-import {showAlert} from "@/utils/utils";
+import {redirectHome, showAlert} from "@/utils/utils";
 import styles from "@/styles/styles";
-import {useRouter} from "expo-router";
 
 export default function UserInfo() {
     const [place, setPlace] = useState("");
     const [interests, setInterests] = useState(""); // comma-separated string
     const [loading, setLoading] = useState(false);
-    const router = useRouter();
 
     const handleSubmit = async () => {
         if (!place || !interests) {
@@ -19,32 +17,18 @@ export default function UserInfo() {
 
         setLoading(true);
         try {
-            const token = localStorage.getItem("jwt"); // web
-            // mobile: AsyncStorage.getItem("jwt")
-
-            if (!token) {
-                showAlert("Erreur", "Utilisateur non authentifié");
-                setLoading(false);
-                return;
-            }
-
             const data = {
                 place,
                 interests: interests.split(",").map((i) => i.trim()),
             };
-
-            const response = await addUserInfo(data, token);
+            const response = await addUserInfo(data);
             showAlert("Succès", "Informations mises à jour !");
-            console.log("Response:", response);
         } catch (error: any) {
-            console.error(error);
             showAlert("Erreur", error.response?.data?.detail || "Erreur serveur");
         } finally {
             setLoading(false);
         }
-        const timer = setTimeout(() => {
-            router.replace("/");
-        }, 50);
+        redirectHome()
     };
 
     return (

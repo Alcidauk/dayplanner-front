@@ -12,21 +12,9 @@ export default function Activities() {
     useEffect(() => {
         const fetchActivities = async () => {
             try {
-                // 🔐 récupérer le JWT
-                const token = localStorage.getItem("jwt"); // web
-                // mobile → AsyncStorage.getItem("jwt")
-
-                if (!token) {
-                    showAlert("Erreur", "Utilisateur non authentifié");
-                    return;
-                }
-
-                const response = await getActivities(token);
-                console.log("Réponse brute API :", response);
-
+                const response = await getActivities();
                 setActivities(response ?? []);
             } catch (error) {
-                console.error(error);
                 showAlert("Erreur", "Impossible de charger les activités");
             } finally {
                 setLoading(false);

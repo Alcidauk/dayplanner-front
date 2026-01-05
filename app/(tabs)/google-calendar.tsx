@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { View, Text, FlatList, ActivityIndicator } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getCalendarEvents } from "@/api/calendarApi";
 import styles from "@/styles/styles";
 import {CalendarEvent} from "@/api/types";
@@ -37,14 +36,10 @@ export default function CalendarScreen() {
 
     useEffect(() => {
         const fetchEvents = async () => {
-            const token = await AsyncStorage.getItem("jwt");
-            if (!token) return;
-
-            const data = await getCalendarEvents(token);
-            setEvents(data);
+            const response = await getCalendarEvents();
+            setEvents(response);
             setLoading(false);
         };
-
         fetchEvents();
     }, []);
 
