@@ -4,7 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { API_URL } from "@/constants/constants";
 import { apiClient, authHeaders } from "@/api/apiClient";
-import {showAlert} from "@/utils/utils";
+import {authEmitter, showAlert} from "@/utils/utils";
 
 export default function LogoutScreen() {
     useEffect(() => {
@@ -14,6 +14,8 @@ export default function LogoutScreen() {
 
                 if (token) {
                     await apiClient.post(`${API_URL}/auth/logout`, {}, authHeaders(token));
+                    authEmitter.emit("authChanged");
+                    router.replace("/");
                 }
             } catch (error) {
                 console.warn("Logout backend failed, continuing local logout");

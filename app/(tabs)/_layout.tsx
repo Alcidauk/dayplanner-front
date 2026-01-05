@@ -1,15 +1,33 @@
 import {createMaterialTopTabNavigator} from "@react-navigation/material-top-tabs";
-import {withLayoutContext} from "expo-router";
+import {useAuth} from "@/hooks/useAuth";
+import HomeScreen from "@//app/(tabs)/index";
+import RegisterScreen from "@/app/(tabs)/register";
+import UserInfo from "@/app/(tabs)/user-info";
+import Activities from "@/app/(tabs)/activities";
+import CalendarScreen from "@/app/(tabs)/google-calendar";
+import LogoutScreen from "@/app/(tabs)/logout";
+import AboutScreen from "@/app/(tabs)/about";
 
 const TopTabs = createMaterialTopTabNavigator();
 
-export const MaterialTopTabs = withLayoutContext(
-    TopTabs.Navigator
-);
-
 export default function TabsLayout() {
+    const {isAuthenticated} = useAuth();
+    const screens = [
+        {name: "index", component: HomeScreen, title: "Home"},
+        {name: "register", component: RegisterScreen, title: "Register"},
+        ...(isAuthenticated
+            ? [
+                {name: "user-info", component: UserInfo, title: "User Info"},
+                {name: "activities", component: Activities, title: "Activities"},
+                {name: "google-calendar", component: CalendarScreen, title: "Calendar"},
+                {name: "logout", component: LogoutScreen, title: "Logout"},
+            ]
+            : []),
+        {name: "about", component: AboutScreen, title: "About"},
+    ];
+
     return (
-        <MaterialTopTabs
+        <TopTabs.Navigator
             screenOptions={{
                 lazy: true,
                 tabBarIndicatorStyle: {backgroundColor: "#000"},
@@ -18,34 +36,14 @@ export default function TabsLayout() {
                 swipeEnabled: true,
             }}
         >
-            <MaterialTopTabs.Screen
-                name="index"
-                options={{title: "Home"}}
-            />
-            <MaterialTopTabs.Screen
-                name="register"
-                options={{title: "Register"}}
-            />
-            <MaterialTopTabs.Screen
-                name="user-info"
-                options={{title: "User Info"}}
-            />
-            <MaterialTopTabs.Screen
-                name="activities"
-                options={{title: "Activities"}}
-            />
-            <MaterialTopTabs.Screen
-                name="google-calendar"
-                options={{title: "Calendar"}}
-            />
-            <MaterialTopTabs.Screen
-                name="logout"
-                options={{title: "Logout"}}
-            />
-            <MaterialTopTabs.Screen
-                name="about"
-                options={{title: "About"}}
-            />
-        </MaterialTopTabs>
+            {screens.map((s) => (
+                <TopTabs.Screen
+                    key={s.name}
+                    name={s.name}
+                    component={s.component}
+                    options={{title: s.title}}
+                />
+            ))}
+        </TopTabs.Navigator>
     );
 }

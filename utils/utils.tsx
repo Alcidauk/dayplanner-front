@@ -1,6 +1,7 @@
 import {Alert, Platform} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
+import { EventEmitter } from "events";
 
 export const showAlert = (title: string, message: string) => {
     if (Platform.OS === "web") {
@@ -42,4 +43,4 @@ export const requireAuth = async (): Promise<string | null> => {
     }
 };
 
-
+export const authEmitter = new EventEmitter();
