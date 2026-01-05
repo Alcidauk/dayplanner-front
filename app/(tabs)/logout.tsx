@@ -4,15 +4,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { API_URL } from "@/constants/constants";
 import { apiClient, authHeaders } from "@/api/apiClient";
-import {authEmitter, showAlert} from "@/utils/utils";
+import {authEmitter, showAlert, getToken} from "@/utils/utils";
 
 export default function LogoutScreen() {
     useEffect(() => {
         const logout = async () => {
             try {
-                const tokenWeb = typeof window !== "undefined" ? localStorage.getItem("jwt") : null;
-                const tokenMobile = typeof window === "undefined" ? await AsyncStorage.getItem("jwt") : null;
-                const token = tokenWeb || tokenMobile;
+               const token = await getToken();
 
                 if (token) {
                     await apiClient.post(`${API_URL}/auth/logout`, {}, authHeaders(token));
