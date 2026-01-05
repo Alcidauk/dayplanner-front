@@ -1,15 +1,11 @@
-// hooks/useAuth.ts
 import { useState, useEffect } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { authEmitter } from "@/utils/utils";
+import { authEmitter, getToken } from "@/utils/utils";
 
 export const useAuth = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     const checkToken = async () => {
-        const tokenWeb = typeof window !== "undefined" ? localStorage.getItem("jwt") : null;
-        const tokenMobile = typeof window === "undefined" ? await AsyncStorage.getItem("jwt") : null;
-        const token = tokenWeb || tokenMobile;
+        const token = await getToken();
         setIsAuthenticated(!!token);
     };
 

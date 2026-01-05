@@ -19,10 +19,8 @@ export const redirectHome = (delay = 50) => {
 
 export const getToken = async (): Promise<string | null> => {
     if (Platform.OS === "web") {
-        console.log("Token envoyé:", localStorage.getItem("jwt"));
         return localStorage.getItem("jwt");
     } else {
-        console.log("Token envoyé:", AsyncStorage.getItem("jwt"));
         return await AsyncStorage.getItem("jwt");
     }
 };
