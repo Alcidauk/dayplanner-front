@@ -11,8 +11,9 @@ export interface ActivityListResponse {
 }
 
 export interface CalendarEvent {
-    id: string;
-    title: string;
+    id: number;
+    summary: string;
+    description: string;
     start: string;
     end: string;
     location?: string;

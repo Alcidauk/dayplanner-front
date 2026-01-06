@@ -32,7 +32,6 @@ export default function RegisterScreen() {
             }, 0);
 
         } catch (error: unknown) {
-            console.log("ERROR:", error);
 
             if (axios.isAxiosError(error)) {
                 showAlert("Erreur", error.response?.data?.detail ?? "Erreur serveur");

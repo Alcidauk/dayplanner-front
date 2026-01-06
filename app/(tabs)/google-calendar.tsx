@@ -48,7 +48,7 @@ export default function CalendarScreen() {
     return (
     <FlatList
         data={events}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(_, i) => i.toString()}
         ListHeaderComponent={TableHeader}
         renderItem={({ item }) => <TableRow item={item} />}
     />

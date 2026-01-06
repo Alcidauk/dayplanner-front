@@ -10,9 +10,7 @@ const storeToken = async (token: string | string[]) => {
         if (typeof token === "string") {
             await AsyncStorage.setItem("jwt", token);
         }
-        console.log("Token stocké sur mobile !");
     } catch (error) {
-        console.error("Erreur stockage token :", error);
     }
 };
 
