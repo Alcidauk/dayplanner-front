@@ -1,5 +1,5 @@
 import {useState, useEffect} from "react";
-import {View, Text, FlatList, Button, Platform, ActivityIndicator, TextInput}
+import {View, Text, FlatList, Button, Platform, ActivityIndicator, TextInput, Modal}
     from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import {showAlert} from "@/utils/utils";
@@ -77,30 +77,6 @@ export default function ActivitiesScreen() {
         const pad = (n: number) => n.toString().padStart(2, "0");
         return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
     };
-    const MOCK_ACTIVITIES: Activity[] = [
-        {
-            id: 1,
-            title: "Cours de yoga en plein air",
-            description: "Séance de yoga tous niveaux dans un parc",
-            duration: "1 heure",
-            location: "Parc Monceau, Paris",
-        },
-        {
-            id: 2,
-            title: "Concert jazz",
-            description: "Concert live avec un groupe local",
-            duration: "2 heures",
-            location: "New Morning, Paris",
-        },
-        {
-            id: 3,
-            title: "Exposition photo",
-            description: "Exposition de photographies contemporaines",
-            duration: "1 heure",
-            location: "Galerie 13, Paris",
-        },
-    ];
-
     if (loading) {
         return (
             <View style={styles.container}>
@@ -113,7 +89,7 @@ export default function ActivitiesScreen() {
         <View style={styles.container}>
             <Text style={styles.title}>Activités recommandées</Text>
             <FlatList
-                data={MOCK_ACTIVITIES} //{activities}
+                data={activities} //{MOCK_ACTIVITIES}
                 keyExtractor={(_, i) => i.toString()}
                 renderItem={({item}) => (
                     <View style={styles.card}>
@@ -128,31 +104,71 @@ export default function ActivitiesScreen() {
                     </View>
                 )}
             />
-            {showPicker && selectedActivity && (
-            <View>
-            {Platform.OS !== "web" && (
-                <DateTimePicker
-                    value={startDate}
-                    mode="datetime"
-                    display="default"
-                    onChange={onChangeDate}
-                />
-            )}
-
-            {Platform.OS === "web" && (
-                <View>
-                    <Text>Sélectionner la date et l’heure</Text>
-                    <input
-                        type="datetime-local"
-                        value={formatLocalDatetime(startDate)}
-                        onChange={(e) => setStartDate(new Date(e.target.value))}
-                    />
+            <Modal
+                visible={showPicker}
+                transparent
+                animationType="slide"
+                onRequestClose={() => setShowPicker(false)}
+            >
+                <View
+                    style={{
+                        flex: 1,
+                        backgroundColor: "rgba(0,0,0,0.4)",
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }}
+                >
+                    <View
+                        style={{
+                            backgroundColor: "white",
+                            padding: 20,
+                            borderRadius: 12,
+                            width: "100%",
+                            maxWidth: 400,
+                        }}
+                    >
+                        <Text style={{ fontSize: 18, fontWeight: "600", marginBottom: 10 }}>
+                            Choisir la date et l’heure
+                        </Text>
+                        {Platform.OS !== "web" && (
+                            <DateTimePicker
+                                value={startDate}
+                                mode="datetime"
+                                display="default"
+                                onChange={onChangeDate}
+                            />
+                        )}
+                        {Platform.OS === "web" && (
+                            <input
+                                type="datetime-local"
+                                value={formatLocalDatetime(startDate)}
+                                onChange={(e) => {
+                                    const [d, t] = e.target.value.split("T");
+                                    const [y, m, day] = d.split("-").map(Number);
+                                    const [h, min] = t.split(":").map(Number);
+                                    setStartDate(new Date(y, m - 1, day, h, min));
+                                }}
+                                style={{
+                                    width: "100%",
+                                    padding: 10,
+                                    marginBottom: 16,
+                                }}
+                            />
+                        )}
+                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                            <Button
+                                title="Annuler"
+                                color="gray"
+                                onPress={() => setShowPicker(false)}
+                            />
+                            <Button
+                                title="Confirmer"
+                                onPress={confirmAddEvent}
+                            />
+                        </View>
+                    </View>
                 </View>
-            )}
-                <Button title="Confirmer" onPress={confirmAddEvent}/>
-            </View>
-            )}
-
+            </Modal>
         </View>
     );
 }
