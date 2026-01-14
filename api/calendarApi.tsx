@@ -14,12 +14,13 @@ export const getCalendarEvents = async (): Promise<CalendarEvent[]> => {
 
 export const addEventToCalendar = async (event: CalendarEvent) => {
     const token = await requireAuth();
+    console.log(event)
     const eventBody = {
         summary: event.summary,
         description: event.description,
         location: event.location,
-        start: new Date().toISOString(),
-        end: new Date(new Date().getTime() + 60*60*1000).toISOString(), // +1h
+        start: event.start,
+        end: event.end,
     };
 
     await apiClient.post("/google_calendar/add_event", eventBody, authHeaders(token));

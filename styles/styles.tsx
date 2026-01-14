@@ -65,7 +65,25 @@ const styles = StyleSheet.create({
         },
         header: {
             fontWeight: "bold",
-        }
+        },
+    modalGeneral: {
+        flex: 1,
+        backgroundColor: "rgba(0,0,0,0.4)",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    modalBody: {
+        backgroundColor: "white",
+        padding: 20,
+        borderRadius: 12,
+        width: "100%",
+        maxWidth: 400,
+    },
+    modalText: {
+        fontSize: 18,
+        fontWeight: "600",
+        marginBottom: 10
+    }
 
 });
 export default styles

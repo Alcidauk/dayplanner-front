@@ -111,23 +111,12 @@ export default function ActivitiesScreen() {
                 onRequestClose={() => setShowPicker(false)}
             >
                 <View
-                    style={{
-                        flex: 1,
-                        backgroundColor: "rgba(0,0,0,0.4)",
-                        justifyContent: "center",
-                        alignItems: "center",
-                    }}
+                    style={styles.modalGeneral}
                 >
                     <View
-                        style={{
-                            backgroundColor: "white",
-                            padding: 20,
-                            borderRadius: 12,
-                            width: "100%",
-                            maxWidth: 400,
-                        }}
+                        style={styles.modalBody}
                     >
-                        <Text style={{ fontSize: 18, fontWeight: "600", marginBottom: 10 }}>
+                        <Text style={styles.modalText}>
                             Choisir la date et l’heure
                         </Text>
                         {Platform.OS !== "web" && (
@@ -148,11 +137,7 @@ export default function ActivitiesScreen() {
                                     const [h, min] = t.split(":").map(Number);
                                     setStartDate(new Date(y, m - 1, day, h, min));
                                 }}
-                                style={{
-                                    width: "100%",
-                                    padding: 10,
-                                    marginBottom: 16,
-                                }}
+                                style={styles.input}
                             />
                         )}
                         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
