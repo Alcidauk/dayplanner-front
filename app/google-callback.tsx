@@ -1,16 +1,21 @@
 import { useEffect } from "react";
 import { View, Text } from "react-native";
-import { useLocalSearchParams } from "expo-router";
+import {useLocalSearchParams} from "expo-router";
 import styles from "@/styles/styles";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {redirectHome, showAlert} from "@/utils/utils";
+import {authEmitter, redirectHome, showAlert} from "@/utils/utils";
 
 const storeToken = async (token: string | string[]) => {
     try {
         if (typeof token === "string") {
-            await AsyncStorage.setItem("jwt", token);
+            if (typeof window !== "undefined") {
+                    localStorage.setItem("jwt", token);
+            } else {
+                await AsyncStorage.setItem("jwt", token);
+            }
         }
-    } catch (error) {
+    } catch (error: any) {
+        showAlert('error', error)
     }
 };
 
@@ -18,20 +23,16 @@ export default function GoogleCallback() {
     const params = useLocalSearchParams();
 
     useEffect(() => {
-        const token : string | string[] = params.token;
-        if (token) {
-            if (typeof window !== "undefined") {
-                if (typeof token === "string") {
-                    localStorage.setItem("jwt", token);
-                } // web
-            }
-            storeToken(token); // Mobile
-            showAlert("Succès", "Connexion Google réussie !");
-            redirectHome()
-        } else {
-            showAlert("Erreur", "Token manquant !");
-        }
-    }, []);
+        const handleCallback = async () => {
+            const token = params?.token;
+            if (!token) return;
+            await storeToken(token);
+            authEmitter.emit("authChanged");
+            redirectHome();
+        };
+        handleCallback();
+    }, [params]);
+
 
     return (
         <View style={styles.container}>

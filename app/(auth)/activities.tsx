@@ -1,5 +1,5 @@
 import {useState, useEffect} from "react";
-import {View, Text, FlatList, Button, Platform, ActivityIndicator, TextInput, Modal}
+import {View, Text, FlatList, Button, Platform, ActivityIndicator, Modal}
     from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import {showAlert} from "@/utils/utils";
