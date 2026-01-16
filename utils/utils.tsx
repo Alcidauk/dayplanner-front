@@ -1,7 +1,7 @@
 import {Alert, Platform} from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { EventEmitter } from "events";
+import {getToken} from "@/hooks/token";
 
 export const showAlert = (title: string, message: string) => {
     if (Platform.OS === "web") {
@@ -13,30 +13,29 @@ export const showAlert = (title: string, message: string) => {
 
 export const redirectHome = (delay = 50) => {
     setTimeout(() => {
-        router.replace("/");
+        router.replace("/(auth)");
     }, delay);
 };
 
-export const getToken = async (): Promise<string | null> => {
-    if (Platform.OS === "web") {
-        return localStorage.getItem("jwt");
-    } else {
-        return await AsyncStorage.getItem("jwt");
-    }
+export const redirectIndex = (delay = 50) => {
+    setTimeout(() => {
+        router.replace("/(public)");
+    }, delay);
 };
+
 
 export const requireAuth = async (): Promise<string | null> => {
     try {
         const token = await getToken();
         if (!token) {
             showAlert("Erreur", "Utilisateur non authentifié");
-            router.replace("/");
+            redirectIndex();
             return null;
         }
         return token;
     } catch (error) {
         showAlert("Erreur", "Impossible de récupérer le token");
-        router.replace("/");
+        redirectIndex();
         return null;
     }
 };

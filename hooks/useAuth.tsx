@@ -1,23 +1,21 @@
-import { useState, useEffect } from "react";
-import { authEmitter, getToken } from "@/utils/utils";
+import {useEffect, useState} from "react";
+import { authEmitter } from "@/utils/utils";
+import {getToken} from "@/hooks/token";
 
 export const useAuth = () => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-    const checkToken = async () => {
-        const token = await getToken();
-        setIsAuthenticated(!!token);
-    };
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
     useEffect(() => {
-        checkToken();
-        const listener = () => checkToken();
-        authEmitter.on("authChanged", listener);
+        let token = getToken()
+        setIsAuthenticated(!!token);
+
+        const listener = () => getToken();
+        authEmitter.addListener("authChanged", listener);
 
         return () => {
-            authEmitter.off("authChanged", listener);
+            authEmitter.removeListener("authChanged", listener);
         };
     }, []);
 
-    return { isAuthenticated };
+    return { isAuthenticated, getToken };
 };

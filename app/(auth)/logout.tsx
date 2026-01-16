@@ -1,39 +1,36 @@
-import { useEffect } from "react";
-import { View, ActivityIndicator } from "react-native";
+import {useEffect} from "react";
+import {View, ActivityIndicator} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { router } from "expo-router";
-import { API_URL } from "@/constants/constants";
-import { apiClient, authHeaders } from "@/api/apiClient";
-import {authEmitter, showAlert, getToken} from "@/utils/utils";
+import {API_URL} from "@/constants/constants";
+import {apiClient, authHeaders} from "@/api/apiClient";
+import {authEmitter, showAlert, redirectIndex} from "@/utils/utils";
+import {getToken, removeToken} from "@/hooks/token";
 
 export default function LogoutScreen() {
     useEffect(() => {
         const logout = async () => {
-            try {
-               const token = await getToken();
+            const token = await getToken();
 
-                if (token) {
+            if (token) {
+                try {
                     await apiClient.post(`${API_URL}/auth/logout`, {}, authHeaders(token));
-                    await AsyncStorage.removeItem("jwt");
-                    if (typeof window !== "undefined") localStorage.removeItem("jwt");
+                    removeToken();
                     authEmitter.emit("authChanged");
-                    router.replace("/");
+                } catch (error) {
+                    console.warn("Logout backend failed, continuing local logout");
+                } finally {
+                    await AsyncStorage.removeItem("jwt");
+                    redirectIndex();
+                    showAlert("Info", "Utilisateur déconnecté");
                 }
-            } catch (error) {
-                console.warn("Logout backend failed, continuing local logout");
-            } finally {
-                await AsyncStorage.removeItem("jwt");
-                router.replace("/");
-                showAlert("Info", "Utilisateur déconnecté")
             }
         };
-
         logout();
     }, []);
 
     return (
-        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-            <ActivityIndicator size="large" />
+        <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
+            <ActivityIndicator size="large"/>
         </View>
     );
 }

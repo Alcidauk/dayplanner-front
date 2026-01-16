@@ -1,38 +1,26 @@
 import { useEffect } from "react";
 import { View, Text } from "react-native";
-import {useLocalSearchParams} from "expo-router";
+import { useLocalSearchParams} from "expo-router";
 import styles from "@/styles/styles";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {authEmitter, redirectHome, showAlert} from "@/utils/utils";
-
-const storeToken = async (token: string | string[]) => {
-    try {
-        if (typeof token === "string") {
-            if (typeof window !== "undefined") {
-                    localStorage.setItem("jwt", token);
-            } else {
-                await AsyncStorage.setItem("jwt", token);
-            }
-        }
-    } catch (error: any) {
-        showAlert('error', error)
-    }
-};
+import {authEmitter, redirectHome, redirectIndex} from "@/utils/utils";
+import {storeToken} from "@/hooks/token";
 
 export default function GoogleCallback() {
-    const params = useLocalSearchParams();
+    const { token } = useLocalSearchParams<{ token?: string }>();
 
     useEffect(() => {
         const handleCallback = async () => {
-            const token = params?.token;
-            if (!token) return;
+            if (!token) {
+                redirectIndex();
+                return;
+            }
+
             await storeToken(token);
             authEmitter.emit("authChanged");
             redirectHome();
         };
         handleCallback();
-    }, [params]);
-
+    }, [token]);
 
     return (
         <View style={styles.container}>
