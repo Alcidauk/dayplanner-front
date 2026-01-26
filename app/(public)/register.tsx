@@ -9,6 +9,7 @@ import {showAlert} from "@/utils/utils";
 export default function RegisterScreen() {
     const [name, setName] = useState("");
     const [surname, setSurname] = useState("");
+    const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
     const [loading, setLoading] = useState(false);
 
@@ -16,7 +17,7 @@ export default function RegisterScreen() {
 
 
     const handleRegister = async () => {
-        if (!name || !surname || !email) {
+        if (!name || !surname || !email || !password) {
             showAlert("Erreur", "Tous les champs sont obligatoires");
             return;
         }
@@ -24,7 +25,7 @@ export default function RegisterScreen() {
         setLoading(true);
 
         try {
-            const user = await createUser({ name, surname, email });
+            const user = await createUser({ name, surname, email, password });
             console.log("USER RETOUR API:", user);
 
             setTimeout(() => {
@@ -68,6 +69,13 @@ export default function RegisterScreen() {
                 onChangeText={setEmail}
                 keyboardType="email-address"
                 autoCapitalize="none"
+                style={styles.input}
+            />
+
+            <TextInput
+                placeholder="Mot de Passe"
+                value={password}
+                onChangeText={setPassword}
                 style={styles.input}
             />
 

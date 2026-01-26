@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { View, Text } from "react-native";
+import {View, Text, ActivityIndicator} from "react-native";
 import { useLocalSearchParams} from "expo-router";
 import styles from "@/styles/styles";
 import {authEmitter, redirectHome, redirectIndex} from "@/utils/utils";
@@ -25,6 +25,8 @@ export default function GoogleCallback() {
     return (
         <View style={styles.container}>
             <Text>Connexion en cours…</Text>
+                <ActivityIndicator size="large"/>
+            );
         </View>
     );
 }
