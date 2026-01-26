@@ -2,7 +2,7 @@ import { apiClient, authHeaders } from "./apiClient";
 import { CalendarEvent, Activity } from "./types";
 import {requireAuth} from "@/utils/utils";
 
-export const getCalendarEvents = async (): Promise<CalendarEvent[]> => {
+export const getGoogleCalendarEvents = async (): Promise<CalendarEvent[]> => {
     const token = await requireAuth();
     const response = await apiClient.get<{ events: CalendarEvent[] }>(
         "/google_calendar/events",
@@ -14,7 +14,6 @@ export const getCalendarEvents = async (): Promise<CalendarEvent[]> => {
 
 export const addEventToGoogleCalendar = async (event: CalendarEvent) => {
     const token = await requireAuth();
-    console.log(event)
     const eventBody = {
         summary: event.summary,
         description: event.description,

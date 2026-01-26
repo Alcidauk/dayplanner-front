@@ -18,6 +18,7 @@ export interface CalendarEvent {
     end: string;
     location?: string;
 }
+
 export interface UserCreate {
     name: string;
     surname: string;
@@ -34,6 +35,12 @@ export interface UserResponse {
 }
 
 export interface UserInfoCreate {
+    place: string;
+    interests: string[];
+}
+
+export interface UserInfoResponse {
+    id: number;
     place: string;
     interests: string[];
 }

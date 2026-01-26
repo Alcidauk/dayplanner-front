@@ -21,6 +21,9 @@ const styles = StyleSheet.create({
         padding: 12,
         marginBottom: 12,
         borderRadius: 6,
+        backgroundColor: "#fff",
+        boxShadow: "#000 0.05 4",
+        elevation: 2,
     },
     link: {
         color: "blue",

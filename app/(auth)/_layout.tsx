@@ -7,6 +7,7 @@ import Activities from "@/app/(auth)/activities";
 import CalendarScreen from "@/app/(auth)/google-calendar";
 import LogoutScreen from "@/app/(auth)/logout";
 import AboutScreen from "@/app/(public)/about";
+import localCalendarScreen from "@/app/(auth)/local-calendar";
 
 const Drawer = createDrawerNavigator();
 
@@ -16,7 +17,8 @@ export default function AuthTabs() {
         {name: "index", component: HomeScreen, title: "Home"},
         {name: "user-info", component: UserInfo, title: "User Info"},
         {name: "activities", component: Activities, title: "Activities"},
-        {name: "google-calendar", component: CalendarScreen, title: "Calendar"},
+        {name: "google-calendar", component: CalendarScreen, title: "Google Calendar"},
+        {name: "local-calendar", component: localCalendarScreen, title: "Local Calendar"},
         {name: "logout", component: LogoutScreen, title: "Logout"},
         {name: "about", component: AboutScreen, title: "About"},
     ];

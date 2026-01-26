@@ -41,21 +41,17 @@ export default function ActivitiesScreen() {
         fetchActivities();
     }, []);
 
-    const onChangeDate = (event: any, date?: Date) => {
-        if (date) {
-            setStartDate(date);
+    const confirmAddEvent = async (selectedStartDate: Date) => {
+        if (!selectedActivity || !calendarTarget) {
+            showAlert("Erreur", "Infos manquantes");
+            return;
         }
-        setShowPicker(Platform.OS === "ios");
-    };
-
-    const confirmAddEvent = async () => {
-        if (!selectedActivity || !calendarTarget) return;
 
         let durationHours = 1;
         const match = selectedActivity.duration?.match(/(\d+)/);
         if (match) durationHours = parseInt(match[1], 10);
 
-        const endDate = new Date(startDate.getTime() + durationHours * 3600000);
+        const endDate = new Date(selectedStartDate.getTime() + durationHours * 3600000);
 
         try {
             if (calendarTarget === "google") {
@@ -64,7 +60,7 @@ export default function ActivitiesScreen() {
                     summary: selectedActivity.title,
                     description: selectedActivity.description,
                     location: selectedActivity.location,
-                    start: startDate.toISOString(),
+                    start: selectedStartDate.toISOString(),
                     end: endDate.toISOString(),
                 });
 
@@ -75,8 +71,8 @@ export default function ActivitiesScreen() {
                     title: selectedActivity.title,
                     description: selectedActivity.description,
                     location: selectedActivity.location,
-                    startDate,
-                    endDate,
+                    startDate: selectedStartDate,
+                    endDate: endDate,
                 });
                 if (Platform.OS === "web") {
                     showAlert("erreur","Agenda local non disponible sur le web");
@@ -112,7 +108,7 @@ export default function ActivitiesScreen() {
         <View style={styles.container}>
             <Text style={styles.title}>Activités recommandées</Text>
             <FlatList
-                data={activities} //{MOCK_ACTIVITIES}
+                data={activities}
                 keyExtractor={(_, i) => i.toString()}
                 renderItem={({item}) => (
                     <View style={styles.card}>
@@ -154,9 +150,9 @@ export default function ActivitiesScreen() {
                                 isVisible={showPicker}
                                 mode="datetime"
                                 onConfirm={(date) => {
-                                    onChangeDate(date);
-                                    confirmAddEvent();
-                                    setShowPicker(false)}}
+                                    setShowPicker(false);
+                                    confirmAddEvent(date);
+                            }}
                                 onCancel={() => setShowPicker(false)}
                             />
                         )}
@@ -181,7 +177,7 @@ export default function ActivitiesScreen() {
                             />
                             <Button
                                 title="Confirmer"
-                                onPress={confirmAddEvent}
+                                onPress={() => confirmAddEvent(startDate)}
                             />
                         </View>
                     </View>

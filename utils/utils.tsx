@@ -40,4 +40,13 @@ export const requireAuth = async (): Promise<string | null> => {
     }
 };
 
+export const formatDate = (dateStr: string) => {
+    return new Date(dateStr).toLocaleString("fr-FR", {
+        day: "2-digit",
+        month: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+    });
+};
+
 export const authEmitter = new EventEmitter();
