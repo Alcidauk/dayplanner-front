@@ -18,15 +18,11 @@ export default function ActivitiesScreen() {
     const [startDate, setStartDate] = useState<Date>(new Date());
     const [calendarTarget, setCalendarTarget] = useState<"google" | "local" | null>(null);
 
-    const handleAddToGoogleCalendar = (activity: Activity) => {
-        setSelectedActivity(activity);
-        setCalendarTarget("google");
-        setShowPicker(true);
-    };
 
-    const handleAddToLocalCalendar = async (activity: Activity) => {
+    const handleAddToCalendar = (activity: Activity, target:"google" | "local" | null) => {
         setSelectedActivity(activity);
-        setCalendarTarget("local");
+        if (!startDate) setStartDate(new Date());
+        setCalendarTarget(target);
         setShowPicker(true);
     };
 
@@ -50,12 +46,6 @@ export default function ActivitiesScreen() {
             setStartDate(date);
         }
         setShowPicker(Platform.OS === "ios");
-    };
-
-    const handleAddToCalendar = (activity: Activity) => {
-        setSelectedActivity(activity);
-        if (!startDate) setStartDate(new Date());
-        setShowPicker(true);
     };
 
     const confirmAddEvent = async () => {
@@ -132,11 +122,11 @@ export default function ActivitiesScreen() {
                         {item.location && <Text>Lieu : {item.location}</Text>}
                         <Button
                             title="Ajouter à l'agenda Google"
-                            onPress={() => handleAddToGoogleCalendar(item)}
+                            onPress={() => handleAddToCalendar(item, 'google')}
                         />
                         <Button
                             title="Ajouter à l'agenda local"
-                            onPress={() => handleAddToLocalCalendar(item)}
+                            onPress={() => handleAddToCalendar(item, 'local')}
                         />
                     </View>
                 )}
