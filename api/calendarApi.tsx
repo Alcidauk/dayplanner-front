@@ -12,7 +12,7 @@ export const getCalendarEvents = async (): Promise<CalendarEvent[]> => {
     return response.data.events;
 };
 
-export const addEventToCalendar = async (event: CalendarEvent) => {
+export const addEventToGoogleCalendar = async (event: CalendarEvent) => {
     const token = await requireAuth();
     console.log(event)
     const eventBody = {
@@ -23,5 +23,5 @@ export const addEventToCalendar = async (event: CalendarEvent) => {
         end: event.end,
     };
 
-    await apiClient.post("/google_calendar/add_event", eventBody, authHeaders(token));
+    await apiClient.post("/google_calendar/add_google_event", eventBody, authHeaders(token));
 };

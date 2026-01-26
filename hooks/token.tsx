@@ -17,20 +17,28 @@ export const removeToken = async () => {
             await AsyncStorage.removeItem("jwt");
         }
     } catch (error: any) {
-        showAlert('error', error)}
+        showAlert('error', error.response?.data?.detail)}
 }
 
 export const storeToken = async (token: string | undefined) => {
     try {
         if (typeof token === "string") {
-            if (typeof window !== "undefined") {
+            if (Platform.OS === "web") {
                 localStorage.setItem("jwt", token);
             } else {
                 await AsyncStorage.setItem("jwt", token);
             }
         }
     } catch (error: any) {
-        showAlert('error', error)
+        let message = "Erreur inconnue";
+        if (error instanceof Error) {
+            message = error.message;
+        } else if (error?.response?.data?.detail) {
+            message = error.response.data.detail;
+        } else {
+            message = JSON.stringify(error);
+        }
+        showAlert('error', message)
     }
 };
 

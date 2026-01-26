@@ -1,12 +1,14 @@
 import {useState, useEffect} from "react";
 import {View, Text, FlatList, Button, Platform, ActivityIndicator, Modal}
     from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import {showAlert} from "@/utils/utils";
 import {getActivities} from "@/api/activityApi";
-import {addEventToCalendar} from "@/api/calendarApi";
+import {addEventToGoogleCalendar} from "@/api/calendarApi";
 import styles from "@/styles/styles";
 import {Activity} from "@/api/types";
+import {addEventToLocalCalendar} from "@/utils/localCalendar";
+
 
 export default function ActivitiesScreen() {
     const [activities, setActivities] = useState<Activity[]>([]);
@@ -14,6 +16,19 @@ export default function ActivitiesScreen() {
     const [showPicker, setShowPicker] = useState(false);
     const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
     const [startDate, setStartDate] = useState<Date>(new Date());
+    const [calendarTarget, setCalendarTarget] = useState<"google" | "local" | null>(null);
+
+    const handleAddToGoogleCalendar = (activity: Activity) => {
+        setSelectedActivity(activity);
+        setCalendarTarget("google");
+        setShowPicker(true);
+    };
+
+    const handleAddToLocalCalendar = async (activity: Activity) => {
+        setSelectedActivity(activity);
+        setCalendarTarget("local");
+        setShowPicker(true);
+    };
 
     useEffect(() => {
         const fetchActivities = async () => {
@@ -44,35 +59,53 @@ export default function ActivitiesScreen() {
     };
 
     const confirmAddEvent = async () => {
-        if (!selectedActivity) return;
+        if (!selectedActivity || !calendarTarget) return;
 
         let durationHours = 1;
         const match = selectedActivity.duration?.match(/(\d+)/);
-        if (match) {
-            durationHours = parseInt(match[1], 10);
-        }
+        if (match) durationHours = parseInt(match[1], 10);
 
-        const endDate = new Date(startDate.getTime() + durationHours * 60 * 60 * 1000);
-        const selectedActivityBody = {
-            id: selectedActivity.id,
-            summary: selectedActivity.title,
-            description: selectedActivity.description,
-            location: selectedActivity.location,
-            start: startDate.toISOString(),
-            end: endDate.toISOString(),
-        };
+        const endDate = new Date(startDate.getTime() + durationHours * 3600000);
 
         try {
-            await addEventToCalendar(selectedActivityBody);
-            showAlert("Succès", "Événement ajouté au calendrier !");
+            if (calendarTarget === "google") {
+                await addEventToGoogleCalendar({
+                    id: selectedActivity.id,
+                    summary: selectedActivity.title,
+                    description: selectedActivity.description,
+                    location: selectedActivity.location,
+                    start: startDate.toISOString(),
+                    end: endDate.toISOString(),
+                });
+
+                showAlert("Succès", "Événement ajouté à Google Agenda ");
+
+            } else if (calendarTarget === "local") {
+                await addEventToLocalCalendar({
+                    title: selectedActivity.title,
+                    description: selectedActivity.description,
+                    location: selectedActivity.location,
+                    startDate,
+                    endDate,
+                });
+                if (Platform.OS === "web") {
+                    showAlert("erreur","Agenda local non disponible sur le web");
+                    return;
+                }
+                showAlert("Succès", "Événement ajouté à l'agenda du téléphone");
+            }
         } catch (e: any) {
-            const message = e?.response?.data?.detail
-            showAlert("Erreur", `Impossible d'ajouter l'événement au calendrier: ${message}`);
+            showAlert(
+                "Erreur",
+                e?.message || "Impossible d'ajouter l'événement"
+            );
         } finally {
             setShowPicker(false);
             setSelectedActivity(null);
+            setCalendarTarget(null);
         }
     };
+
     const formatLocalDatetime = (date: Date) => {
         const pad = (n: number) => n.toString().padStart(2, "0");
         return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
@@ -98,8 +131,12 @@ export default function ActivitiesScreen() {
                         {item.duration && <Text>Durée : {item.duration}</Text>}
                         {item.location && <Text>Lieu : {item.location}</Text>}
                         <Button
-                            title="Ajouter à l'agenda"
-                            onPress={() => handleAddToCalendar(item)}
+                            title="Ajouter à l'agenda Google"
+                            onPress={() => handleAddToGoogleCalendar(item)}
+                        />
+                        <Button
+                            title="Ajouter à l'agenda local"
+                            onPress={() => handleAddToLocalCalendar(item)}
                         />
                     </View>
                 )}
@@ -117,14 +154,20 @@ export default function ActivitiesScreen() {
                         style={styles.modalBody}
                     >
                         <Text style={styles.modalText}>
+                            Ajouter à : {calendarTarget === "google" ? "Google Agenda" : "Agenda du téléphone"}
+                        </Text>
+                        <Text style={styles.modalText}>
                             Choisir la date et l’heure
                         </Text>
                         {Platform.OS !== "web" && (
-                            <DateTimePicker
-                                value={startDate}
+                            <DateTimePickerModal
+                                isVisible={showPicker}
                                 mode="datetime"
-                                display="default"
-                                onChange={onChangeDate}
+                                onConfirm={(date) => {
+                                    onChangeDate(date);
+                                    confirmAddEvent();
+                                    setShowPicker(false)}}
+                                onCancel={() => setShowPicker(false)}
                             />
                         )}
                         {Platform.OS === "web" && (

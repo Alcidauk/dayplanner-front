@@ -3,6 +3,8 @@ import { View, Text, FlatList, ActivityIndicator } from "react-native";
 import { getCalendarEvents } from "@/api/calendarApi";
 import styles from "@/styles/styles";
 import {CalendarEvent} from "@/api/types";
+import axios from "axios";
+import {redirectHome, showAlert} from "@/utils/utils";
 
 export default function CalendarScreen() {
     const [events, setEvents] = useState<CalendarEvent[]>([]);
@@ -36,9 +38,19 @@ export default function CalendarScreen() {
 
     useEffect(() => {
         const fetchEvents = async () => {
-            const response = await getCalendarEvents();
-            setEvents(response);
-            setLoading(false);
+            try {
+                const response = await getCalendarEvents();
+                setEvents(response);
+            } catch (error: unknown) {
+                if (axios.isAxiosError(error)) {
+                    showAlert("Erreur", error.response?.data?.detail ?? "Erreur serveur");
+                } else {
+                    showAlert("Erreur", "Erreur inconnue");
+                }
+            } finally {
+                setLoading(false);
+                redirectHome()
+            }
         };
         fetchEvents();
     }, []);
