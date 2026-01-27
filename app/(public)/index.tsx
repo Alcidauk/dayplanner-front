@@ -1,34 +1,11 @@
 import {Text, View, Button, TextInput} from "react-native";
 import styles from "@/styles/styles";
-import {API_URL} from "@/constants/constants";
-import {authEmitter, redirectHome, showAlert} from "@/utils/utils";
-import {storeToken} from "@/hooks/token";
 import {useState} from "react";
-import {handleGoogleLogin} from "@/api/authAPi";
+import {login, googleLogin} from "@/api/authAPi";
 
 export default function Index() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
-    const handleLogin = async () => {
-        try {
-            const res = await fetch(`${API_URL}/auth/login`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password }),
-            });
-
-            if (!res.ok) {
-                showAlert("Error","Login failed");
-            }
-            const data = await res.json();
-            await storeToken(data.access_token)
-            authEmitter.emit("authChanged");
-            redirectHome()
-        } catch (e: any) {
-            showAlert("Erreur",`Erreur de connexion: ${e.message || JSON.stringify(e)}`);
-        }
-    };
 
             return (
                 <View style={styles.container}>
@@ -52,9 +29,9 @@ export default function Index() {
                         style={styles.input}
                     />
 
-                    <Button title="Se connecter" onPress={handleLogin} />
+                    <Button title="Se connecter" onPress={() => login({ email, password })} />
                     <Text style={{ marginVertical: 20 }}>ou</Text>
-            <Button title="Se connecter avec Google" onPress={handleGoogleLogin} />
+            <Button title="Se connecter avec Google" onPress={googleLogin} />
         </View>
     );
 }

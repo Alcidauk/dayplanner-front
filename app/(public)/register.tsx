@@ -1,42 +1,15 @@
 import { useState } from "react";
 import { View, Text, TextInput, Button } from "react-native";
-import { createUser } from "@/api/userApi";
-import axios from "axios";
+import { register } from "@/api/userApi";
 import styles from "@/styles/styles";
 
-import {showAlert} from "@/utils/utils";
 
 export default function RegisterScreen() {
     const [name, setName] = useState("");
     const [surname, setSurname] = useState("");
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
-    const [loading, setLoading] = useState(false);
 
-    const handleRegister = async () => {
-        if (!name || !surname || !email || !password) {
-            showAlert("Erreur", "Tous les champs sont obligatoires");
-            return;
-        }
-        setLoading(true);
-        try {
-            const user = await createUser({ name, surname, email, password });
-            console.log("USER RETOUR API:", user);
-
-            setTimeout(() => {
-                showAlert("Succès", `Compte créé pour ${user.email}`);
-            }, 0);
-
-        } catch (error: unknown) {
-            if (axios.isAxiosError(error)) {
-                showAlert("Erreur", error.response?.data?.detail ?? "Erreur serveur");
-            } else {
-                showAlert("Erreur", "Erreur inconnue");
-            }
-        } finally {
-            setLoading(false);
-        }
-    };
 
     return (
         <View style={styles.container}>
@@ -74,9 +47,8 @@ export default function RegisterScreen() {
             />
 
             <Button
-                title={loading ? "Création..." : "Créer le compte"}
-                onPress={handleRegister}
-                disabled={loading}
+                title={"Créer le compte"}
+                onPress={() => register({ name, surname, email, password })}
             />
         </View>
     );

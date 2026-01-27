@@ -1,3 +1,15 @@
+export interface RegisterPayload {
+    name: string;
+    surname: string;
+    email: string;
+    password: string;
+}
+
+export interface LoginPayload {
+    email: string;
+    password: string;
+}
+
 export interface Activity {
     id: number;
     title: string;
