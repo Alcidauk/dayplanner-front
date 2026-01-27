@@ -12,7 +12,8 @@ export const getToken = async (): Promise<string | null> => {
 
 export const removeToken = async () => {
     try {
-        if (typeof window !== "undefined") { localStorage.removeItem("jwt");
+        if (Platform.OS === "web") {
+            localStorage.removeItem("jwt");
         } else {
             await AsyncStorage.removeItem("jwt");
         }

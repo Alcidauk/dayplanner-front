@@ -1,15 +1,10 @@
-import {Text, View, Button, Linking, TextInput} from "react-native";
+import {Text, View, Button, TextInput} from "react-native";
 import styles from "@/styles/styles";
 import {API_URL} from "@/constants/constants";
 import {authEmitter, redirectHome, showAlert} from "@/utils/utils";
 import {storeToken} from "@/hooks/token";
 import {useState} from "react";
-
-const handleGoogleLogin = async () => {
-    const url = `${API_URL}/auth/google/login`;
-    await Linking.openURL(url);
-
-};
+import {handleGoogleLogin} from "@/api/authAPi";
 
 export default function Index() {
     const [email, setEmail] = useState("");

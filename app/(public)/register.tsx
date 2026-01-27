@@ -13,17 +13,12 @@ export default function RegisterScreen() {
     const [email, setEmail] = useState("");
     const [loading, setLoading] = useState(false);
 
-
-
-
     const handleRegister = async () => {
         if (!name || !surname || !email || !password) {
             showAlert("Erreur", "Tous les champs sont obligatoires");
             return;
         }
-
         setLoading(true);
-
         try {
             const user = await createUser({ name, surname, email, password });
             console.log("USER RETOUR API:", user);
@@ -33,7 +28,6 @@ export default function RegisterScreen() {
             }, 0);
 
         } catch (error: unknown) {
-
             if (axios.isAxiosError(error)) {
                 showAlert("Erreur", error.response?.data?.detail ?? "Erreur serveur");
             } else {
