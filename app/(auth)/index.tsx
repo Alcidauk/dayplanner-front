@@ -74,9 +74,8 @@ export default function Index() {
                 )}
                 <Button title="Voir mon agenda local" onPress={() => router.push("/local-calendar")} />
             </View>
-            <View style={{ marginTop: 20, gap: 12 }}>
+            <View style={styles.card}>
                 <Button title="Ajouter une activité" onPress={() => router.push("/activities")} />
-
             </View>
         </View>
     );
