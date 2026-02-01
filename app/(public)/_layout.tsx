@@ -9,9 +9,9 @@ const Drawer = createDrawerNavigator();
 export default function TabsLayout() {
     const {isAuthenticated} = useAuth();
     const screens = [
-        {name: "index", component: HomeScreen, title: "Home"},
-        {name: "register", component: RegisterScreen, title: "Register"},
-        {name: "about", component: AboutScreen, title: "About"},
+        {name: "index", component: HomeScreen, title: "Accueil"},
+        {name: "register", component: RegisterScreen, title: "Enregistrement"},
+        {name: "about", component: AboutScreen, title: "A Propos"},
     ];
 
     return (

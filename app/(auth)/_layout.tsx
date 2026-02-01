@@ -14,13 +14,13 @@ const Drawer = createDrawerNavigator();
 export default function AuthTabs() {
     const {isAuthenticated} = useAuth();
     const screens = [
-        {name: "index", component: HomeScreen, title: "Home"},
-        {name: "user-info", component: UserInfo, title: "User Info"},
-        {name: "activities", component: Activities, title: "Activities"},
-        {name: "google-calendar", component: CalendarScreen, title: "Google Calendar"},
-        {name: "local-calendar", component: localCalendarScreen, title: "Local Calendar"},
-        {name: "logout", component: LogoutScreen, title: "Logout"},
-        {name: "about", component: AboutScreen, title: "About"},
+        {name: "index", component: HomeScreen, title: "Accueil"},
+        {name: "user-info", component: UserInfo, title: "Infos Utilisateur"},
+        {name: "activities", component: Activities, title: "Activités"},
+        {name: "google-calendar", component: CalendarScreen, title: "Calendrier Google "},
+        {name: "local-calendar", component: localCalendarScreen, title: "Calendrier Local"},
+        {name: "logout", component: LogoutScreen, title: "Déconnexion"},
+        {name: "about", component: AboutScreen, title: "A Propos"},
     ];
 
     if (!isAuthenticated) {
