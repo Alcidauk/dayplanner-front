@@ -11,6 +11,10 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         textAlign: "center",
     },
+    text: {
+        fontSize: 18,
+        textAlign: "center",
+    },
     button: {
         fontSize: 20,
         textDecorationLine: 'underline',

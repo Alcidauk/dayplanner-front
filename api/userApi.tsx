@@ -1,9 +1,16 @@
 import { API_URL } from "@/constants/constants";
 import {RegisterPayload, UserCreate, UserResponse} from "@/api/types";
-import {apiClient} from "@/api/apiClient";
+import {apiClient, authHeaders} from "@/api/apiClient";
 import {showAlert} from "@/utils/utils";
 import axios from "axios";
+import {getToken} from "@/hooks/token";
 
+
+export const getCurrentUser = async () : Promise<UserResponse>  => {
+    const token = await getToken();
+    const response = await apiClient.get("/user/current_user", authHeaders(token));
+    return response.data;
+};
 
 
 export const createUser = async (userData: UserCreate): Promise<UserResponse> => {
@@ -14,7 +21,7 @@ export const createUser = async (userData: UserCreate): Promise<UserResponse> =>
     return response.data;
 };
 
-export const register = async ({name, surname, email, password}: RegisterPayload) => {
+export const register = async ({name, surname, email, password}: RegisterPayload)  => {
     if (!name || !surname || !email || !password) {
         showAlert("Erreur", "Tous les champs sont obligatoires");
         return;

@@ -62,6 +62,7 @@ export default function ActivitiesScreen() {
                     location: selectedActivity.location,
                     start: selectedStartDate.toISOString(),
                     end: endDate.toISOString(),
+                    source: "google"
                 });
 
                 showAlert("Succès", "Événement ajouté à Google Agenda ");

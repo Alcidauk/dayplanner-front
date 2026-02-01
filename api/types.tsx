@@ -29,6 +29,7 @@ export interface CalendarEvent {
     start: string;
     end: string;
     location?: string;
+    source: "google" | "local";
 }
 
 export interface UserCreate {

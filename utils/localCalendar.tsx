@@ -6,24 +6,26 @@ const requestCalendarPermission = async () => {
     return status === "granted";
 };
 
-export const getLocalCalendarEvents = async () => {
+export const getLocalCalendarEvents = async (date?: Date) => {
     const granted = await requestCalendarPermission();
     if (!granted) {
         throw new Error("Permission calendrier refusée");
     }
 
     const calendars = await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT);
-
     const calendarIds = calendars.map(cal => cal.id);
 
-    const startDate = new Date();
-    startDate.setDate(startDate.getDate() - 1);
-    const endDate = new Date();
-    endDate.setDate(startDate.getDate() + 30);
+    let startDate = new Date();
+    let endDate = new Date();
 
-    const events = await Calendar.getEventsAsync(calendarIds, startDate, endDate);
-
-    return events;
+    if (date) {
+        startDate.setHours(0, 0, 0, 0);
+        endDate.setHours(23, 59, 59, 999);
+    } else {
+        startDate.setHours(0, 0, 0, 0);
+        endDate.setDate(startDate.getDate() + 30);
+    }
+    return await Calendar.getEventsAsync(calendarIds, startDate, endDate);
 };
 
 
