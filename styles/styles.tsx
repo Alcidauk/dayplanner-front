@@ -11,9 +11,14 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         textAlign: "center",
     },
+    subtitle: {
+        fontSize: 14,
+        opacity: 0.7,
+        marginBottom: 20,
+    },
     text: {
-        fontSize: 18,
-        textAlign: "center",
+        fontSize: 14,
+        lineHeight: 20,
     },
     button: {
         fontSize: 20,
@@ -53,6 +58,16 @@ const styles = StyleSheet.create({
         marginTop: 8,
         fontSize: 12,
         color: "#888",
+    },
+    feature: {
+        fontSize: 15,
+        marginVertical: 2,
+    },
+    footer: {
+        textAlign: "center",
+        fontSize: 12,
+        marginTop: 20,
+        opacity: 0.6,
     },
     rowHeader: {
             flexDirection: "row",
