@@ -1,7 +1,7 @@
 import {Text, View, Button, TextInput} from "react-native";
 import styles from "@/styles/styles";
 import {useState} from "react";
-import {login, googleLogin} from "@/api/authAPi";
+import {login, googleLogin} from "@/api/authApi";
 
 export default function Index() {
     const [email, setEmail] = useState("");

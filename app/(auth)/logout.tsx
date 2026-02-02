@@ -1,7 +1,7 @@
 import {useEffect} from "react";
 import {View, ActivityIndicator} from "react-native";
 import styles from "@/styles/styles";
-import {logout} from "@/api/authAPi";
+import {logout} from "@/api/authApi";
 
 export default function LogoutScreen() {
     useEffect(() => {
