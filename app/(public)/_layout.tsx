@@ -1,13 +1,11 @@
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import {useAuth} from "@/hooks/useAuth";
-import HomeScreen from "@/app/(public)/index";
+import HomeScreen from "@/app/index";
 import RegisterScreen from "@/app/(public)/register";
 import AboutScreen from "@/app/(public)/about";
 
 const Drawer = createDrawerNavigator();
 
 export default function TabsLayout() {
-    const {isAuthenticated} = useAuth();
     const screens = [
         {name: "index", component: HomeScreen, title: "Accueil"},
         {name: "register", component: RegisterScreen, title: "Enregistrement"},
@@ -16,7 +14,6 @@ export default function TabsLayout() {
 
     return (
         <Drawer.Navigator
-            key={isAuthenticated ? "auth" : "noauth"}
             screenOptions={{
                 lazy: true,
                 drawerPosition: "left",
