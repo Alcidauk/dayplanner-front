@@ -51,7 +51,7 @@ export default function UserInfo() {
     };
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.container}>
             <Text style={styles.title}>Vos informations</Text>
             {userInfo ? (
                 <>
@@ -87,6 +87,6 @@ export default function UserInfo() {
                 title={loading ? "Enregistrement..." : "Enregistrer"}
                 onPress={handleSubmit}
             />
-        </ScrollView>
+        </View>
     );
 }
