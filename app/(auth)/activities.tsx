@@ -9,6 +9,8 @@ import styles from "@/styles/styles";
 import {Activity} from "@/api/types";
 import {addEventToLocalCalendar} from "@/utils/localCalendar";
 import AppButton from "@/components/app_button";
+import LoadingView from "@/components/loading_view";
+import NoDataView from "@/components/no_data_view";
 
 
 export default function ActivitiesScreen() {
@@ -20,7 +22,7 @@ export default function ActivitiesScreen() {
     const [calendarTarget, setCalendarTarget] = useState<"google" | "local" | null>(null);
 
 
-    const handleAddToCalendar = (activity: Activity, target:"google" | "local" | null) => {
+    const handleAddToCalendar = (activity: Activity, target: "google" | "local" | null) => {
         setSelectedActivity(activity);
         if (!startDate) setStartDate(new Date());
         setCalendarTarget(target);
@@ -40,6 +42,9 @@ export default function ActivitiesScreen() {
             }
         };
         fetchActivities();
+        setActivities([])
+        console.log(activities)
+
     }, []);
 
     const confirmAddEvent = async (selectedStartDate: Date) => {
@@ -77,7 +82,7 @@ export default function ActivitiesScreen() {
                     endDate: endDate,
                 });
                 if (Platform.OS === "web") {
-                    showAlert("erreur","Agenda local non disponible sur le web");
+                    showAlert("erreur", "Agenda local non disponible sur le web");
                     return;
                 }
                 showAlert("Succès", "Événement ajouté à l'agenda du téléphone");
@@ -96,39 +101,40 @@ export default function ActivitiesScreen() {
 
     const formatLocalDatetime = (date: Date) => {
         const pad = (n: number) => n.toString().padStart(2, "0");
-        return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+        return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
     };
     if (loading) {
-        return (
-            <View style={styles.container}>
-                <ActivityIndicator size="large"/>
-                <Text>Chargement des activités...</Text>
-            </View>
-        );
+        return <LoadingView/>
     }
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Activités recommandées</Text>
-            <FlatList
-                data={activities}
-                keyExtractor={(_, i) => i.toString()}
-                renderItem={({item}) => (
-                    <View style={styles.card}>
-                        <Text style={styles.cardTitle}>{item.title}</Text>
-                        <Text>{item.description}</Text>
-                        {item.duration && <Text>Durée : {item.duration}</Text>}
-                        {item.location && <Text>Lieu : {item.location}</Text>}
-                        <AppButton
-                            title="Ajouter à l'agenda Google"
-                            onPress={() => handleAddToCalendar(item, 'google')}
-                        />
-                        <AppButton
-                            title="Ajouter à l'agenda local"
-                            onPress={() => handleAddToCalendar(item, 'local')}
-                        />
-                    </View>
-                )}
-            />
+            {activities.length ? (
+                <>
+                    <FlatList
+                        data={activities}
+                        keyExtractor={(_, i) => i.toString()}
+                        renderItem={({item}) => (
+                            <View style={styles.card}>
+                                <Text style={styles.cardTitle}>{item.title}</Text>
+                                <Text>{item.description}</Text>
+                                {item.duration && <Text>Durée : {item.duration}</Text>}
+                                {item.location && <Text>Lieu : {item.location}</Text>}
+                                <AppButton
+                                    title="Ajouter à l'agenda Google"
+                                    onPress={() => handleAddToCalendar(item, 'google')}
+                                />
+                                <AppButton
+                                    title="Ajouter à l'agenda local"
+                                    onPress={() => handleAddToCalendar(item, 'local')}
+                                />
+                            </View>
+                        )}
+                    />
+                </>
+            ) : (<NoDataView/>)}
+
             <Modal
                 visible={showPicker}
                 transparent
@@ -154,7 +160,7 @@ export default function ActivitiesScreen() {
                                 onConfirm={(date) => {
                                     setShowPicker(false);
                                     confirmAddEvent(date);
-                            }}
+                                }}
                                 onCancel={() => setShowPicker(false)}
                             />
                         )}
@@ -171,7 +177,7 @@ export default function ActivitiesScreen() {
                                 style={styles.input}
                             />
                         )}
-                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
                             <AppButton
                                 title="Annuler"
                                 onPress={() => setShowPicker(false)}

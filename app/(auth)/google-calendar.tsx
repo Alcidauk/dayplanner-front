@@ -4,6 +4,8 @@ import { getGoogleCalendarEvents } from "@/api/calendarApi";
 import styles from "@/styles/styles";
 import axios from "axios";
 import {formatDate, redirectHome, showAlert} from "@/utils/utils";
+import LoadingView from "@/components/loading_view";
+import NoDataView from "@/components/no_data_view";
 
 export default function CalendarScreen() {
     const [events, setEvents] = useState<any[]>([]);
@@ -23,17 +25,20 @@ export default function CalendarScreen() {
                 }
             } finally {
                 setLoading(false);
-                redirectHome()
             }
         };
         fetchEvents();
     }, []);
 
-    if (loading) return <ActivityIndicator size="large" />;
+    if (loading) {
+        <LoadingView/>
+    }
 
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Événements de l’agenda Google</Text>
+            {events.length ? (
+                <>
             <FlatList
                 data={events}
                 keyExtractor={(item: any) => item.id}
@@ -47,5 +52,7 @@ export default function CalendarScreen() {
                     </View>
                         )}
             />
+                </>
+            ) : (<NoDataView/>)}
         </View>
 )}

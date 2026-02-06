@@ -5,6 +5,7 @@ import {redirectHome, showAlert} from "@/utils/utils";
 import styles from "@/styles/styles";
 import {UserInfoResponse} from "@/api/types";
 import AppButton from "@/components/app_button";
+import NoDataView from "@/components/no_data_view";
 
 export default function UserInfo() {
     const [place, setPlace] = useState("");
@@ -63,9 +64,8 @@ export default function UserInfo() {
                         renderItem={({ item }) => <Text style={styles.card}>• {item}</Text>}
                     />
                 </>
-            ) : (
-                <Text>Aucune information disponible</Text>
-            )}
+            ) : (<NoDataView/>)}
+
             <Text style={styles.title}>Nouveau Lieu :</Text>
             <TextInput
                 style={styles.input}

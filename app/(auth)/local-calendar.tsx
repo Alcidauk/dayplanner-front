@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { View, Text, FlatList, ActivityIndicator } from "react-native";
 import styles from "@/styles/styles";
 import {getLocalCalendarEvents} from "@/utils/localCalendar";
-import {formatDate} from "@/utils/utils";
+import {formatDate, redirectHome} from "@/utils/utils";
+import LoadingView from "@/components/loading_view";
+import NoDataView from "@/components/no_data_view";
 
 export default function localCalendarScreen() {
     const [events, setEvents] = useState<any[]>([]);
@@ -23,25 +25,14 @@ export default function localCalendarScreen() {
     }, []);
 
     if (loading) {
-        return (
-            <View style={styles.container}>
-                <ActivityIndicator size="large" />
-                <Text>Chargement des événements...</Text>
-            </View>
-        );
-    }
-
-    if (!events.length) {
-        return (
-            <View style={styles.container}>
-                <Text>Aucun événement trouvé</Text>
-            </View>
-        );
+        return <LoadingView/>
     }
 
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Événements de l’agenda Local</Text>
+            {events.length ? (
+                <>
             <FlatList
                 data={events}
                 keyExtractor={(item:any) => item.id}
@@ -54,6 +45,8 @@ export default function localCalendarScreen() {
                     </View>
                 )}
             />
+                </>
+            ) : (<NoDataView/>)}
         </View>
     );
 }
