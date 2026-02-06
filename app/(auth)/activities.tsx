@@ -8,6 +8,7 @@ import {addEventToGoogleCalendar} from "@/api/calendarApi";
 import styles from "@/styles/styles";
 import {Activity} from "@/api/types";
 import {addEventToLocalCalendar} from "@/utils/localCalendar";
+import AppButton from "@/components/app_button";
 
 
 export default function ActivitiesScreen() {
@@ -117,11 +118,11 @@ export default function ActivitiesScreen() {
                         <Text>{item.description}</Text>
                         {item.duration && <Text>Durée : {item.duration}</Text>}
                         {item.location && <Text>Lieu : {item.location}</Text>}
-                        <Button
+                        <AppButton
                             title="Ajouter à l'agenda Google"
                             onPress={() => handleAddToCalendar(item, 'google')}
                         />
-                        <Button
+                        <AppButton
                             title="Ajouter à l'agenda local"
                             onPress={() => handleAddToCalendar(item, 'local')}
                         />
@@ -171,12 +172,11 @@ export default function ActivitiesScreen() {
                             />
                         )}
                         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                            <Button
+                            <AppButton
                                 title="Annuler"
-                                color="gray"
                                 onPress={() => setShowPicker(false)}
                             />
-                            <Button
+                            <AppButton
                                 title="Confirmer"
                                 onPress={() => confirmAddEvent(startDate)}
                             />

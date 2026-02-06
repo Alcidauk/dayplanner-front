@@ -4,6 +4,7 @@ import {addUserInfo, getUserInfo} from "@/api/userInfoApi";
 import {redirectHome, showAlert} from "@/utils/utils";
 import styles from "@/styles/styles";
 import {UserInfoResponse} from "@/api/types";
+import AppButton from "@/components/app_button";
 
 export default function UserInfo() {
     const [place, setPlace] = useState("");
@@ -82,10 +83,9 @@ export default function UserInfo() {
                 numberOfLines={2}
             />
 
-            <Button
+            <AppButton
                 title={loading ? "Enregistrement..." : "Enregistrer"}
                 onPress={handleSubmit}
-                disabled={loading}
             />
         </ScrollView>
     );

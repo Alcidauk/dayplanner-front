@@ -2,6 +2,7 @@ import {Text, View, Button, TextInput} from "react-native";
 import styles from "@/styles/styles";
 import {useState} from "react";
 import {login, googleLogin} from "@/api/authApi";
+import AppButton from "@/components/app_button";
 
 export default function Index() {
     const [email, setEmail] = useState("");
@@ -29,7 +30,7 @@ export default function Index() {
                         style={styles.input}
                     />
 
-                    <Button title="Se connecter" onPress={() => login({ email, password })} />
+                    <AppButton title="Se connecter" onPress={() => login({ email, password })} />
                     <Text style={{ marginVertical: 20 }}>ou</Text>
             <Button title="Se connecter avec Google" onPress={googleLogin} />
         </View>

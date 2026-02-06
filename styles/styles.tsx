@@ -21,8 +21,17 @@ const styles = StyleSheet.create({
         lineHeight: 20,
     },
     button: {
-        fontSize: 20,
-        textDecorationLine: 'underline',
+        paddingVertical: 14,
+        paddingHorizontal: 20,
+        borderRadius: 12,
+        alignItems: "center",
+        marginVertical: 8,
+        backgroundColor: "blue",
+    },
+    button_text: {
+        fontSize: 14,
+        lineHeight: 20,
+        color: "white",
     },
     input: {
         borderWidth: 1,

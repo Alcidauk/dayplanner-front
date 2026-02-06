@@ -8,6 +8,7 @@ import {getCurrentUser} from "@/api/userApi";
 import {getGoogleCalendarEvents} from "@/api/calendarApi";
 import {formatDate} from "@/utils/utils";
 import {getLocalCalendarEvents} from "@/utils/localCalendar";
+import AppButton from "@/components/app_button";
 
 
 
@@ -57,7 +58,7 @@ export default function Index() {
                         </Text>
                     ))
                 )}
-                <Button title="Voir mon agenda Google" onPress={() => router.push("/google-calendar")} />
+                <AppButton title="Voir mon agenda Google" onPress={() => router.push("/google-calendar")} />
             </View>
             <View style={styles.card}>
                 <Text style={styles.cardTitle}>Calendrier local</Text>
@@ -72,10 +73,10 @@ export default function Index() {
                         </Text>
                     ))
                 )}
-                <Button title="Voir mon agenda local" onPress={() => router.push("/local-calendar")} />
+                <AppButton title="Voir mon agenda local" onPress={() => router.push("/local-calendar")} />
             </View>
             <View style={styles.card}>
-                <Button title="Ajouter une activité" onPress={() => router.push("/activities")} />
+                <AppButton title="Ajouter une activité" onPress={() => router.push("/activities")} />
             </View>
         </View>
     );

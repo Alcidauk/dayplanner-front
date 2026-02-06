@@ -2,6 +2,7 @@ import { useState } from "react";
 import { View, Text, TextInput, Button } from "react-native";
 import { register } from "@/api/userApi";
 import styles from "@/styles/styles";
+import AppButton from "@/components/app_button";
 
 
 export default function RegisterScreen() {
@@ -46,7 +47,7 @@ export default function RegisterScreen() {
                 style={styles.input}
             />
 
-            <Button
+            <AppButton
                 title={"Créer le compte"}
                 onPress={() => register({ name, surname, email, password })}
             />
