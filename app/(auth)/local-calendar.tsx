@@ -6,7 +6,7 @@ import {formatDate, redirectHome} from "@/utils/utils";
 import LoadingView from "@/components/loading_view";
 import NoDataView from "@/components/no_data_view";
 
-export default function localCalendarScreen() {
+export default function LocalCalendarScreen() {
     const [events, setEvents] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 

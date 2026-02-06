@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import {Fonts} from "@/styles/theme";
 
 const styles = StyleSheet.create({
     container: {
@@ -10,6 +11,8 @@ const styles = StyleSheet.create({
         fontSize: 24,
         marginBottom: 20,
         textAlign: "center",
+        fontFamily: Fonts.serif,
+        color: "grey"
     },
     subtitle: {
         fontSize: 14,
@@ -32,7 +35,7 @@ const styles = StyleSheet.create({
         shadowRadius: 6,
         shadowOffset: { width: 0, height: 4 },
         elevation: 4,
-        backgroundColor: "black"
+        backgroundColor: "#000"
     },
     button_text: {
         fontSize: 14,

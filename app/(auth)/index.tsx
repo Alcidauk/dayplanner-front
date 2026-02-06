@@ -1,4 +1,4 @@
-import {Button, Text, View} from "react-native";
+import {Text, View} from "react-native";
 import styles from "@/styles/styles";
 import {useAuth} from "@/hooks/useAuth";
 import {Redirect, useRouter} from "expo-router";
