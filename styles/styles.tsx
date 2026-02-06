@@ -22,11 +22,17 @@ const styles = StyleSheet.create({
     },
     button: {
         paddingVertical: 14,
-        paddingHorizontal: 20,
-        borderRadius: 12,
+        paddingHorizontal: 24,
+        borderRadius: 14,
         alignItems: "center",
-        marginVertical: 8,
-        backgroundColor: "blue",
+        justifyContent: "center",
+        marginVertical: 10,
+        shadowColor: "#000",
+        shadowOpacity: 0.15,
+        shadowRadius: 6,
+        shadowOffset: { width: 0, height: 4 },
+        elevation: 4,
+        backgroundColor: "black"
     },
     button_text: {
         fontSize: 14,

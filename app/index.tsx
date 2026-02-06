@@ -32,7 +32,7 @@ export default function Index() {
 
                     <AppButton title="Se connecter" onPress={() => login({ email, password })} />
                     <Text style={{ marginVertical: 20 }}>ou</Text>
-            <Button title="Se connecter avec Google" onPress={googleLogin} />
+            <AppButton title="Se connecter avec Google" onPress={googleLogin} />
         </View>
     );
 }
