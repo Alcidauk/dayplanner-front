@@ -19,6 +19,15 @@ export default function TabsLayout() {
                 drawerPosition: "left",
                 drawerType: "slide",
                 swipeEnabled: true,
+                drawerActiveTintColor: 'white',
+                drawerInactiveTintColor: '#999',
+                drawerStyle: {
+                    backgroundColor: "black",
+                },
+                headerStyle: {
+                    backgroundColor: "black",
+                },
+                headerTintColor: "white",
             }}
         >
             {screens.map((s) => (
