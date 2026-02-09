@@ -21,8 +21,9 @@ export const login = async ({email, password}:LoginPayload) => {
         authEmitter.emit("authChanged");
         showAlert('success',"Succès","Connexion réussie !");
         redirectHome()
-    } catch (e: any) {
-        showAlert('error', "Erreur", `Erreur de connexion: ${e.message}`);
+    } catch (error: any) {
+        let message = handleErrorMessages(error)
+        showAlert('error','Erreur', message);
     }
 };
 

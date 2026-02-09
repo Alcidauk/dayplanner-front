@@ -19,9 +19,9 @@ export default function UserInfo() {
         try {
             const data = await getUserInfo();
             setUserInfo(data ?? []);
-        } catch (e: any) {
-            const message = e?.response?.data?.detail
-            showAlert("error", "Erreur", `Impossible de charger les infos utilisateur: ${message}`);
+        } catch (error: any) {
+            let message = handleErrorMessages(error)
+            showAlert('error','Erreur', message);
         } finally {
             setLoading(false);
         }
