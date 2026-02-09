@@ -19,7 +19,7 @@ export const login = async ({email, password}:LoginPayload) => {
         await storeTokens(access_token, refresh_token, expires_in || 3600);
         tokenRefreshService.start();
         authEmitter.emit("authChanged");
-        showAlert('success',"Succès","Connexion sréussie !");
+        showAlert('success',"Succès","Connexion réussie !");
         redirectHome()
     } catch (e: any) {
         showAlert('error', "Erreur", `Erreur de connexion: ${e.message}`);
