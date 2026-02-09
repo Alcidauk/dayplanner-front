@@ -138,19 +138,17 @@ export default function ActivitiesScreen() {
             <Modal
                 visible={showPicker}
                 transparent
-                animationType="slide"
+                animationType="fade"
                 onRequestClose={() => setShowPicker(false)}
             >
-                <View
-                    style={styles.modalGeneral}
-                >
+                <View style={styles.overlay}>
                     <View
-                        style={styles.modalBody}
+                        style={styles.container}
                     >
-                        <Text style={styles.modalText}>
+                        <Text style={styles.header}>
                             Ajouter à : {calendarTarget === "google" ? "Google Agenda" : "Agenda du téléphone"}
                         </Text>
-                        <Text style={styles.modalText}>
+                        <Text style={styles.content}>
                             Choisir la date et l’heure
                         </Text>
                         {Platform.OS !== "web" && (
@@ -177,7 +175,7 @@ export default function ActivitiesScreen() {
                                 style={styles.input}
                             />
                         )}
-                        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
+                        <View style={styles.buttonContainer}>
                             <AppButton
                                 title="Annuler"
                                 onPress={() => setShowPicker(false)}
