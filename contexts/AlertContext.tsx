@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import CustomAlert from '@/components/CustomAlert';
+import Custom_alert from '@/components/custom_alert';
 import { alertManager } from '@/utils/alertManager';
 
 interface AlertOptions {
@@ -40,7 +40,7 @@ export function AlertProvider({ children }: { children: ReactNode }) {
         <AlertContext.Provider value={{ showAlert }}>
             {children}
             {alertConfig && (
-                <CustomAlert
+                <Custom_alert
                     visible={visible}
                     title={alertConfig.title}
                     message={alertConfig.message}

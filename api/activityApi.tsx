@@ -1,5 +1,5 @@
 import { apiClient, authHeaders } from "./apiClient";
-import { ActivityListResponse } from "./types";
+import {Activity, ActivityListResponse} from "./types";
 import {requireAuth} from "@/utils/utils";
 
 export const getActivities = async () => {
@@ -11,3 +11,13 @@ export const getActivities = async () => {
 
     return response.data.activities;
 };
+
+export const addActivities = async (activity: Activity): Promise<Activity> => {
+    const token = await requireAuth()
+    const response = await apiClient.post<Activity>(
+        "/activity/add_activity",
+        activity,
+        authHeaders(token)
+    );
+    return response.data;
+}

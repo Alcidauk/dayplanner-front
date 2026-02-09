@@ -149,7 +149,8 @@ const styles = StyleSheet.create({
         lineHeight: 22,
     },
     buttonContainer: {
-        flexDirection: 'column',
+        flexDirection: 'row',
+        alignItems: "center",
         borderTopWidth: 1,
         borderTopColor: '#E0E0E0',
         marginBottom: 32
@@ -174,6 +175,23 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 16,
         fontWeight: '600',
+    },
+    modalContainer: {
+        width: '90%',
+        maxWidth: 500,
+        maxHeight: '80%',
+        padding: 20,
+    },
+    label: {
+        fontSize: 16,
+        fontWeight: '600',
+        color: '#333',
+        marginTop: 15,
+        marginBottom: 5,
+    },
+    textArea: {
+        height: 100,
+        textAlignVertical: 'top',
     },
 });
 export default styles

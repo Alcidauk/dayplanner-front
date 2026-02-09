@@ -1,8 +1,8 @@
 import {useState, useEffect} from "react";
-import {View, Text, FlatList, Platform, Modal}
+import {View, Text, FlatList, Platform, Modal, TextInput}
     from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import {getActivities} from "@/api/activityApi";
+import {addActivities, getActivities} from "@/api/activityApi";
 import {addEventToGoogleCalendar} from "@/api/calendarApi";
 import styles from "@/styles/styles";
 import {Activity} from "@/api/types";
@@ -11,16 +11,23 @@ import AppButton from "@/components/app_button";
 import LoadingView from "@/components/loading_view";
 import NoDataView from "@/components/no_data_view";
 import {showAlert} from "@/utils/alertManager";
+import {handleErrorMessages} from "@/utils/utils";
 
 
 export default function ActivitiesScreen() {
     const [activities, setActivities] = useState<Activity[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [showPicker, setShowPicker] = useState(false);
     const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
     const [startDate, setStartDate] = useState<Date>(new Date());
     const [calendarTarget, setCalendarTarget] = useState<"google" | "local" | null>(null);
-
+    const [showCreateModal, setShowCreateModal] = useState(false);
+    const [newActivity, setNewActivity] = useState<Partial<Activity>>({
+        title: "",
+        description: "",
+        location: "",
+        duration: "1 heure"
+    });
 
     const handleAddToCalendar = (activity: Activity, target: "google" | "local" | null) => {
         setSelectedActivity(activity);
@@ -28,24 +35,59 @@ export default function ActivitiesScreen() {
         setCalendarTarget(target);
         setShowPicker(true);
     };
+    const fetchActivities = async () => {
+        try {
+            setLoading(true);
+            const data = await getActivities();
+            setActivities(data ?? []);
+        } catch (e: any) {
+            const message = e?.response?.data?.detail
+            showAlert("error", "Erreur", `Impossible de charger les activités: ${message}`);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-    useEffect(() => {
-        const fetchActivities = async () => {
+    const createActivity = async () => {
+        if (!newActivity.title?.trim()) {
+            showAlert("error", "Erreur", "Le titre est requis");
+            return;
+        }
+        if (!newActivity.description?.trim()) {
+            showAlert("error", "Erreur", "La description est requise");
+            return;
+        }
+
+        try {
+            const activityToAdd: Activity = {
+                id: Date.now(),
+                title: newActivity.title.trim(),
+                description: newActivity.description.trim(),
+                location: newActivity.location?.trim() || "",
+                duration: newActivity.duration || "1 heure"
+            };
+            setActivities(prev => [activityToAdd, ...prev]);
             try {
-                const data = await getActivities();
-                setActivities(data ?? []);
-            } catch (e: any) {
-                const message = e?.response?.data?.detail
-                showAlert("error", "Erreur", `Impossible de charger les activités: ${message}`);
-            } finally {
-                setLoading(false);
+                console.log("activity:", activityToAdd)
+                await addActivities(activityToAdd)
+            } catch (error: unknown) {
+                let message = handleErrorMessages(error)
+                showAlert('error', "Erreur", message)
             }
-        };
-        fetchActivities();
-        setActivities([])
-        console.log(activities)
+            setNewActivity({
+                title: "",
+                description: "",
+                location: "",
+                duration: "1 heure"
+            });
+            setShowCreateModal(false);
+            showAlert("success", "Succès", "Activité créée avec succès");
 
-    }, []);
+        } catch (error: any) {
+            let message = handleErrorMessages(error)
+            showAlert("error", "Erreur", message);
+        }
+    };
 
     const confirmAddEvent = async (selectedStartDate: Date) => {
         if (!selectedActivity || !calendarTarget) {
@@ -110,6 +152,16 @@ export default function ActivitiesScreen() {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Activités recommandées</Text>
+            <AppButton
+                title="Me recommander des activités"
+                onPress={() => fetchActivities()}
+            />
+            <View>
+                <AppButton
+                    title="Créer une nouvelle activité"
+                    onPress={() => setShowCreateModal(true)}
+                />
+            </View>
             {activities.length ? (
                 <>
                     <FlatList
@@ -183,6 +235,72 @@ export default function ActivitiesScreen() {
                             <AppButton
                                 title="Confirmer"
                                 onPress={() => confirmAddEvent(startDate)}
+                            />
+                        </View>
+                    </View>
+                </View>
+            </Modal>
+
+            <Modal
+                visible={showCreateModal}
+                transparent
+                animationType="fade"
+                onRequestClose={() => setShowCreateModal(false)}
+            >
+                <View style={styles.overlay}>
+                    <View style={[styles.card, styles.modalContainer]}>
+                        <Text style={styles.cardTitle}>Créer une nouvelle activité</Text>
+
+                        <Text style={styles.label}>Titre *</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Ex: Randonnée en montagne"
+                            value={newActivity.title}
+                            onChangeText={(text) => setNewActivity(prev => ({...prev, title: text}))}
+                        />
+
+                        <Text style={styles.label}>Description *</Text>
+                        <TextInput
+                            style={[styles.input, styles.textArea]}
+                            placeholder="Décrivez l'activité..."
+                            value={newActivity.description}
+                            onChangeText={(text) => setNewActivity(prev => ({...prev, description: text}))}
+                            multiline
+                            numberOfLines={4}
+                        />
+
+                        <Text style={styles.label}>Lieu</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Ex: Parc National des Pyrénées"
+                            value={newActivity.location}
+                            onChangeText={(text) => setNewActivity(prev => ({...prev, location: text}))}
+                        />
+
+                        <Text style={styles.label}>Durée</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Ex: 2 heures, 1 journée"
+                            value={newActivity.duration}
+                            onChangeText={(text) => setNewActivity(prev => ({...prev, duration: text}))}
+                        />
+
+                        <View style={styles.buttonContainer}>
+                            <AppButton
+                                title="Annuler"
+                                onPress={() => {
+                                    setShowCreateModal(false);
+                                    setNewActivity({
+                                        title: "",
+                                        description: "",
+                                        location: "",
+                                        duration: "1 heure"
+                                    });
+                                }}
+                            />
+                            <AppButton
+                                title="Créer"
+                                onPress={createActivity}
                             />
                         </View>
                     </View>

@@ -14,7 +14,7 @@ interface CustomAlertProps {
     onCancel?: () => void;
 }
 
-export default function CustomAlert({
+export default function Custom_alert({
                                         visible,
                                         title,
                                         message,
