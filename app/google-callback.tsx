@@ -31,7 +31,6 @@ export default function GoogleCallback() {
                 tokenRefreshService.start();
                 authEmitter.emit("authChanged");
 
-                // Afficher un message de succès
                 showAlert('success',"Succès","Connexion Google réussie !");
                 redirectHome();
             } catch (error) {
