@@ -8,6 +8,8 @@ import CalendarScreen from "@/app/(auth)/google-calendar";
 import LogoutScreen from "@/app/(auth)/logout";
 import AboutScreen from "@/app/(public)/about";
 import LocalCalendarScreen from "@/app/(auth)/local-calendar";
+import {ImageBackground} from "react-native";
+import styles from "@/styles/styles";
 
 const Drawer = createDrawerNavigator();
 
@@ -44,6 +46,12 @@ export default function AuthTabs() {
                     backgroundColor: "black",
                 },
                 headerTintColor: "white",
+                headerRight: () => (
+                    <ImageBackground
+                        source={require("@/assets/images/dayplanner_image.png")}
+                        style={styles.logo}
+                        resizeMode="cover"
+                    />)
             }}
         >
             {screens.map((s) => (

@@ -1,7 +1,9 @@
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import {createDrawerNavigator} from "@react-navigation/drawer";
 import HomeScreen from "@/app/index";
 import RegisterScreen from "@/app/(public)/register";
 import AboutScreen from "@/app/(public)/about";
+import {ImageBackground} from "react-native";
+import styles from "@/styles/styles"
 
 const Drawer = createDrawerNavigator();
 
@@ -28,6 +30,12 @@ export default function TabsLayout() {
                     backgroundColor: "black",
                 },
                 headerTintColor: "white",
+                headerRight: () => (
+                    <ImageBackground
+                        source={require("@/assets/images/dayplanner_image.png")}
+                        style={styles.logo}
+                        resizeMode="cover"
+                    />)
             }}
         >
             {screens.map((s) => (
