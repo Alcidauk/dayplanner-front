@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     },
     overlay: {
         flex: 1,
-        backgroundColor: 'white',
+        backgroundColor:  'black',
         justifyContent: 'center',
         alignItems: 'center',
         padding: 20,
