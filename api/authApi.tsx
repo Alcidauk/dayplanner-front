@@ -2,9 +2,10 @@ import {getAccessToken, clearTokens, storeTokens} from "@/hooks/token";
 import {apiClient, authHeaders} from "@/api/apiClient";
 import {Linking} from "react-native";
 import {API_URL} from "@/constants/constants";
-import {authEmitter, redirectHome, redirectIndex, showAlert} from "@/utils/utils";
+import {authEmitter, redirectHome, redirectIndex} from "@/utils/utils";
 import {LoginPayload, TokenData} from "@/api/types";
 import {tokenRefreshService} from "@/services/tokenRefreshService";
+import { showAlert } from '@/utils/alertManager';
 
 
 export const login = async ({email, password}:LoginPayload) => {
@@ -20,7 +21,7 @@ export const login = async ({email, password}:LoginPayload) => {
         authEmitter.emit("authChanged");
         redirectHome()
     } catch (e: any) {
-        showAlert("Erreur", `Erreur de connexion: ${e.message}`);
+        showAlert('error', "Erreur", `Erreur de connexion: ${e.message}`);
     }
 };
 
@@ -43,12 +44,12 @@ export const logout = async () => {
         try {
             await apiClient.post(`${API_URL}/auth/logout`, {}, authHeaders(token));
         } catch (error) {
-            showAlert("Erreur", "Logout backend failed, continuing local logout");
+            showAlert('error', "Erreur", "Logout backend failed, continuing local logout");
         } finally {
             await clearTokens();
             authEmitter.emit("authChanged");
             redirectIndex();
-            showAlert("Info", "Utilisateur déconnecté");
+            showAlert("info", "Info", "Utilisateur déconnecté");
         }
     } else {
         redirectIndex();

@@ -1,8 +1,7 @@
 import {useState, useEffect} from "react";
-import {View, Text, FlatList, Button, Platform, ActivityIndicator, Modal}
+import {View, Text, FlatList, Platform, Modal}
     from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import {showAlert} from "@/utils/utils";
 import {getActivities} from "@/api/activityApi";
 import {addEventToGoogleCalendar} from "@/api/calendarApi";
 import styles from "@/styles/styles";
@@ -11,6 +10,7 @@ import {addEventToLocalCalendar} from "@/utils/localCalendar";
 import AppButton from "@/components/app_button";
 import LoadingView from "@/components/loading_view";
 import NoDataView from "@/components/no_data_view";
+import {showAlert} from "@/utils/alertManager";
 
 
 export default function ActivitiesScreen() {
@@ -36,7 +36,7 @@ export default function ActivitiesScreen() {
                 setActivities(data ?? []);
             } catch (e: any) {
                 const message = e?.response?.data?.detail
-                showAlert("Erreur", `Impossible de charger les activités: ${message}`);
+                showAlert("error", "Erreur", `Impossible de charger les activités: ${message}`);
             } finally {
                 setLoading(false);
             }
@@ -49,7 +49,7 @@ export default function ActivitiesScreen() {
 
     const confirmAddEvent = async (selectedStartDate: Date) => {
         if (!selectedActivity || !calendarTarget) {
-            showAlert("Erreur", "Infos manquantes");
+            showAlert("error", "Erreur", "Infos manquantes");
             return;
         }
 
@@ -71,7 +71,7 @@ export default function ActivitiesScreen() {
                     source: "google"
                 });
 
-                showAlert("Succès", "Événement ajouté à Google Agenda ");
+                showAlert("success", "Succès", "Événement ajouté à Google Agenda ");
 
             } else if (calendarTarget === "local") {
                 await addEventToLocalCalendar({
@@ -82,13 +82,13 @@ export default function ActivitiesScreen() {
                     endDate: endDate,
                 });
                 if (Platform.OS === "web") {
-                    showAlert("erreur", "Agenda local non disponible sur le web");
+                    showAlert("error","erreur", "Agenda local non disponible sur le web");
                     return;
                 }
-                showAlert("Succès", "Événement ajouté à l'agenda du téléphone");
+                showAlert("success", "Succès", "Événement ajouté à l'agenda du téléphone");
             }
         } catch (e: any) {
-            showAlert(
+            showAlert("error",
                 "Erreur",
                 e?.message || "Impossible d'ajouter l'événement"
             );

@@ -1,9 +1,7 @@
 import {Platform} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {showAlert} from "@/utils/utils";
-import { jwtDecode } from 'jwt-decode';
-import {logout} from "@/api/authApi";
 import {TokenData} from "@/api/types";
+import {showAlert} from "@/utils/alertManager";
 
 export const getTokenData = async (): Promise<TokenData | null> => {
     try {
@@ -47,7 +45,7 @@ export const clearTokens = async () => {
             await AsyncStorage.removeItem("auth_tokens");
         }
     } catch (error: any) {
-        showAlert('error', error.response?.data?.detail)}
+        showAlert('error', 'Erreur', error.response?.data?.detail)}
 }
 
 export const storeTokens = async (accessToken: string, refreshToken: string, expiresIn: number = 3600) => {
@@ -72,7 +70,7 @@ export const storeTokens = async (accessToken: string, refreshToken: string, exp
         } else {
             message = JSON.stringify(error);
         }
-        showAlert('error', message)
+        showAlert('error','Erreur', message)
     }
 };
 

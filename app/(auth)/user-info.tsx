@@ -1,11 +1,12 @@
 import {useEffect, useState} from "react";
-import {Text, TextInput, Button, ScrollView, View, FlatList} from "react-native";
+import {Text, TextInput, View, FlatList} from "react-native";
 import {addUserInfo, getUserInfo} from "@/api/userInfoApi";
-import {redirectHome, showAlert} from "@/utils/utils";
+import {redirectHome} from "@/utils/utils";
 import styles from "@/styles/styles";
 import {UserInfoResponse} from "@/api/types";
 import AppButton from "@/components/app_button";
 import NoDataView from "@/components/no_data_view";
+import {showAlert} from "@/utils/alertManager";
 
 export default function UserInfo() {
     const [place, setPlace] = useState("");
@@ -20,7 +21,7 @@ export default function UserInfo() {
             setUserInfo(data ?? []);
         } catch (e: any) {
             const message = e?.response?.data?.detail
-            showAlert("Erreur", `Impossible de charger les infos utilisateur: ${message}`);
+            showAlert("error", "Erreur", `Impossible de charger les infos utilisateur: ${message}`);
         } finally {
             setLoading(false);
         }
@@ -30,7 +31,7 @@ export default function UserInfo() {
 
     const handleSubmit = async () => {
         if (!place || !interests) {
-            showAlert("Erreur", "Tous les champs sont obligatoires");
+            showAlert("error", "Erreur", "Tous les champs sont obligatoires");
             return;
         }
 
@@ -41,9 +42,9 @@ export default function UserInfo() {
                 interests: interests.split(",").map((i) => i.trim()),
             };
             const response = await addUserInfo(data);
-            showAlert("Succès", "Informations mises à jour !");
+            showAlert("success", "Succès", "Informations mises à jour !");
         } catch (error: any) {
-            showAlert("Erreur", error.response?.data?.detail || "Erreur serveur");
+            showAlert("error", "Erreur", error.response?.data?.detail || "Erreur serveur");
         } finally {
             setLoading(false);
         }

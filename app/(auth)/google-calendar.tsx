@@ -3,9 +3,10 @@ import { View, Text, FlatList, ActivityIndicator } from "react-native";
 import { getGoogleCalendarEvents } from "@/api/calendarApi";
 import styles from "@/styles/styles";
 import axios from "axios";
-import {formatDate, redirectHome, showAlert} from "@/utils/utils";
+import {formatDate} from "@/utils/utils";
 import LoadingView from "@/components/loading_view";
 import NoDataView from "@/components/no_data_view";
+import {showAlert} from "@/utils/alertManager";
 
 export default function CalendarScreen() {
     const [events, setEvents] = useState<any[]>([]);
@@ -19,9 +20,9 @@ export default function CalendarScreen() {
                 setEvents(response);
             } catch (error: unknown) {
                 if (axios.isAxiosError(error)) {
-                    showAlert("Erreur", error.response?.data?.detail ?? "Erreur serveur");
+                    showAlert("error", "Erreur", error.response?.data?.detail ?? "Erreur serveur");
                 } else {
-                    showAlert("Erreur", "Erreur inconnue");
+                    showAlert("error", "Erreur", "Erreur inconnue");
                 }
             } finally {
                 setLoading(false);

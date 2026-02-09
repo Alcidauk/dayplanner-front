@@ -1,9 +1,9 @@
 import { API_URL } from "@/constants/constants";
 import {RegisterPayload, UserCreate, UserResponse} from "@/api/types";
 import {apiClient, authHeaders} from "@/api/apiClient";
-import {showAlert} from "@/utils/utils";
 import axios from "axios";
 import {getAccessToken} from "@/hooks/token";
+import {showAlert} from "@/utils/alertManager";
 
 
 export const getCurrentUser = async () : Promise<UserResponse>  => {
@@ -23,7 +23,7 @@ export const createUser = async (userData: UserCreate): Promise<UserResponse> =>
 
 export const register = async ({name, surname, email, password}: RegisterPayload)  => {
     if (!name || !surname || !email || !password) {
-        showAlert("Erreur", "Tous les champs sont obligatoires");
+        showAlert("error", "Erreur", "Tous les champs sont obligatoires");
         return;
     }
     try {
@@ -31,14 +31,14 @@ export const register = async ({name, surname, email, password}: RegisterPayload
         console.log("USER RETOUR API:", user);
 
         setTimeout(() => {
-            showAlert("Succès", `Compte créé pour ${user.email}`);
+            showAlert("success","Succès", `Compte créé pour ${user.email}`);
         }, 0);
 
     } catch (error: unknown) {
         if (axios.isAxiosError(error)) {
-            showAlert("Erreur", error.response?.data?.detail ?? "Erreur serveur");
+            showAlert("error", "Erreur", error.response?.data?.detail ?? "Erreur serveur");
         } else {
-            showAlert("Erreur", "Erreur inconnue");
+            showAlert("error","Erreur", "Erreur inconnue");
         }
     }
 };

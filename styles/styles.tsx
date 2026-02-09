@@ -88,25 +88,6 @@ const styles = StyleSheet.create({
         marginTop: 20,
         opacity: 0.6,
     },
-    rowHeader: {
-            flexDirection: "row",
-            backgroundColor: "#eee",
-            paddingVertical: 10,
-        },
-        row: {
-            flexDirection: "row",
-            paddingVertical: 10,
-            borderBottomWidth: 1,
-            borderColor: "#ddd",
-        },
-        cell: {
-            flex: 1,
-            paddingHorizontal: 8,
-            fontSize: 12,
-        },
-        header: {
-            fontWeight: "bold",
-        },
     modalGeneral: {
         flex: 1,
         backgroundColor: "rgba(0,0,0,0.4)",
@@ -124,7 +105,58 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: "600",
         marginBottom: 10
-    }
-
+    },
+    overlay: {
+        flex: 1,
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+    },
+    header: {
+        paddingVertical: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    icon: {
+        fontSize: 48,
+        color: 'white',
+        fontWeight: 'bold',
+    },
+    content: {
+        padding: 20,
+    },
+    message: {
+        fontSize: 16,
+        color: '#666',
+        textAlign: 'center',
+        lineHeight: 22,
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        borderTopWidth: 1,
+        borderTopColor: '#E0E0E0',
+    },
+    singleButton: {
+        flex: 1,
+    },
+    cancelButton: {
+        backgroundColor: 'white',
+        borderRightWidth: 1,
+        borderRightColor: '#E0E0E0',
+    },
+    confirmButton: {
+        // backgroundColor défini dynamiquement
+    },
+    cancelButtonText: {
+        color: '#666',
+        fontSize: 16,
+        fontWeight: '600',
+    },
+    confirmButtonText: {
+        color: 'white',
+        fontSize: 16,
+        fontWeight: '600',
+    },
 });
 export default styles

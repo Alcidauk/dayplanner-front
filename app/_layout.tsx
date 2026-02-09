@@ -4,6 +4,7 @@ import LoadingView from "@/components/loading_view";
 import {tokenRefreshService} from "@/services/tokenRefreshService";
 import {getAccessToken} from "@/hooks/token";
 import {authEmitter, redirectHome, redirectIndex} from "@/utils/utils";
+import { AlertProvider } from "@/contexts/AlertContext";
 
 export default function RootLayout() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -43,13 +44,10 @@ export default function RootLayout() {
         const inPublicGroup = segments[0] === "(public)";
 
         if (!isAuthenticated && inAuthGroup) {
-            // Non authentifié mais dans le groupe auth → rediriger vers public
             redirectIndex();
         } else if (isAuthenticated && inPublicGroup) {
-            // Authentifié mais dans le groupe public → rediriger vers auth
             redirectHome();
         } else if (!inAuthGroup && !inPublicGroup) {
-            // Première visite → rediriger vers le bon groupe
             if (isAuthenticated) {
                 redirectHome();
             } else {
@@ -63,6 +61,7 @@ export default function RootLayout() {
     }
 
     return (
+        <AlertProvider>
         <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen
                 name="(public)"
@@ -74,5 +73,6 @@ export default function RootLayout() {
                 name="google-callback"
             />
         </Stack>
+        </AlertProvider>
     );
 }
