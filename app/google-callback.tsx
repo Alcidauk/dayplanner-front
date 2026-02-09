@@ -4,29 +4,48 @@ import { useLocalSearchParams} from "expo-router";
 import styles from "@/styles/styles";
 import {authEmitter, redirectHome, redirectIndex} from "@/utils/utils";
 import {storeTokens} from "@/hooks/token";
+import {showAlert} from "@/utils/alertManager";
+import {tokenRefreshService} from "@/services/tokenRefreshService";
+import LoadingView from "@/components/loading_view";
 
 export default function GoogleCallback() {
-    const { token } = useLocalSearchParams<{ token?: string }>();
+    const { accessToken, refreshToken, expiresIn } = useLocalSearchParams<{
+        accessToken?: string;
+        refreshToken?: string;
+        expiresIn?: string;
+    }>();
 
     useEffect(() => {
         const handleCallback = async () => {
-            if (!token) {
+
+            if (!accessToken || !refreshToken) {
+                console.error("Missing tokens");
+                showAlert('error', "Erreur","Authentification Google échouée");
                 redirectIndex();
                 return;
             }
+            try {
+                const expiresInSeconds = expiresIn ? parseInt(expiresIn) : 3600;
+                await storeTokens(accessToken, refreshToken, expiresInSeconds);
 
-            await storeTokens(token);
-            authEmitter.emit("authChanged");
-            redirectHome();
+                tokenRefreshService.start();
+                authEmitter.emit("authChanged");
+
+                // Afficher un message de succès
+                showAlert('success',"Succès","Connexion Google réussie !");
+                redirectHome();
+            } catch (error) {
+                console.error("Error storing tokens:", error);
+                showAlert('error', "Erreur", "Erreur lors de la sauvegarde des tokens");
+                redirectIndex();
+            }
         };
         handleCallback();
-    }, [token]);
+    }, [accessToken, refreshToken, expiresIn]);
 
     return (
         <View style={styles.container}>
-            <Text>Connexion en cours…</Text>
-                <ActivityIndicator size="large"/>
-            );
+            <LoadingView/>
         </View>
     );
 }

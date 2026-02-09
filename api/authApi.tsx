@@ -34,7 +34,6 @@ export const refreshToken = async (tokenData: TokenData) => {
 export const googleLogin = async () => {
     const url = `${API_URL}/auth/google/login`;
     await Linking.openURL(url);
-
 };
 
 export const logout = async () => {
