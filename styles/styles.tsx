@@ -15,10 +15,11 @@ const styles = StyleSheet.create({
     title: {
         padding: 12,
         fontSize: 24,
-        marginBottom: 20,
         textAlign: "center",
         fontFamily: Fonts.serif,
-        color: "grey"
+        color: "grey",
+        fontWeight: "bold",
+        marginBottom: 8
     },
     subtitle: {
         fontSize: 14,
@@ -26,8 +27,12 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     text: {
-        fontSize: 14,
+        fontSize: 16,
+        marginBottom: 16,
         lineHeight: 20,
+    },
+    whiteText: {
+        color: "#fff",
     },
     button: {
         paddingVertical: 14,
@@ -63,20 +68,26 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     card: {
-        backgroundColor: "#fff",
         padding: 16,
-        borderRadius: 10,
-        marginBottom: 12,
+        borderRadius: 16,
+        backgroundColor: "#6c757d",
+        color: "#fff",
+        marginBottom: 16,
         boxShadow: "#000 0.05 4",
         elevation: 2,
     },
     cardTitle: {
-        fontSize: 16,
-        fontWeight: "600",
+        fontSize: 18,
+        fontWeight: "bold",
+        color: "#fff",
+        marginBottom: 8,
+        flexShrink: 1
     },
     cardDescription: {
         marginTop: 6,
         color: "#555",
+        borderRadius: 16,
+        backgroundColor: "#fff",
     },
     cardMeta: {
         marginTop: 8,
@@ -138,9 +149,10 @@ const styles = StyleSheet.create({
         lineHeight: 22,
     },
     buttonContainer: {
-        flexDirection: 'row',
+        flexDirection: 'column',
         borderTopWidth: 1,
         borderTopColor: '#E0E0E0',
+        marginBottom: 32
     },
     singleButton: {
         flex: 1,

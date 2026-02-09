@@ -11,14 +11,14 @@ import {getCurrentUser} from "@/api/userApi";
 import {CalendarEvent, UserResponse} from "@/api/types";
 import {showAlert} from "@/utils/alertManager";
 
-export default function Index() {
+export default function TodayDashboard() {
     const router = useRouter();
-    const { getToken, isAuthenticated } = useAuth();
+    const { getToken } = useAuth();
 
     const [loading, setLoading] = useState(true);
     const [googleEvents, setGoogleEvents] = useState<any[]>([]);
     const [localEvents, setLocalEvents] = useState<any[]>([]);
-    const [user, setUser] = useState<{ name: string, surname:string, email:string, google_account_id:string |null} | null>(null);
+    const [user, setUser] = useState<{ name: string, email: string, surname: string, google_account_id: string |null } | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -27,29 +27,28 @@ export default function Index() {
                 const token = await getToken();
                 if (token) {
                     const user: UserResponse = await getCurrentUser()
-                    setUser({
-                        name: user.name,
-                        surname: user.surname,
-                        email: user.email,
-                        google_account_id: user.google_account_id,
-                    });
+                    setUser({ name: user.name,
+                    email: user.email,
+                    surname: user.surname,
+                    google_account_id: user.google_account_id});
                 }
+                const today = new Date();
                 if (user && user.google_account_id) {
-                    const googleData: CalendarEvent[] = await getGoogleCalendarEvents(new Date());
+                    const googleData = await getGoogleCalendarEvents(today);
                     setGoogleEvents(googleData);
                 } else {
                     const googleData: CalendarEvent[] = [];
                     setGoogleEvents(googleData);
                 }
                 if (user && Platform.OS !== 'web') {
-                    const localData = await getLocalCalendarEvents(new Date());
+                    const localData: any[] = await getLocalCalendarEvents(today);
                     setLocalEvents(localData);
                 } else {
-                    const localData: CalendarEvent[] = [];
+                    const localData: any[] = [];
                     setLocalEvents(localData);
                 }
             } catch (error) {
-                let message = handleErrorMessages(error)
+                let message = handleErrorMessages(error);
                 showAlert('error', "Erreur", message);
             } finally {
                 setLoading(false);
@@ -58,50 +57,79 @@ export default function Index() {
         fetchData();
     }, []);
 
+    const renderEvent = (event: any, isLocal = false) => {
+        const startTime = isLocal ? formatDate(event.startDate) : formatDate(event.start);
+        const isSoon =
+            new Date(startTime).getTime() - new Date().getTime() < 3600_000;
+        return (
+            <View
+                key={event.id}
+                style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    marginVertical: 4,
+                    padding: 6,
+                    backgroundColor: isSoon ? "#c51313" : "#000",
+                    borderRadius: 8,
+                }}
+            >
+                <Text style={styles.cardTitle}>
+                    {event.summary || event.title}
+                </Text>
+                <Text style={{ fontWeight: "bold", color: isSoon ? "red" : "#333" }}>
+                    {startTime}
+                </Text>
+            </View>
+
+        );
+    };
+
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <Text style={styles.title}>
                 Bonjour {user?.name ?? "Utilisateur"}
             </Text>
-            <Text style={styles.text}>Voici ton résumé du jour</Text>
+            <Text style={styles.text}>
+                Voici ton tableau de bord du jour
+            </Text>
 
-            <View style={styles.card}>
-                <Text style={styles.cardTitle}>Calendrier Google</Text>
-                {loading && <Text>Chargement…</Text>}
+            <View
+                style={styles.card}
+            >
+                <Text style={styles.cardTitle}>
+                    Google Agenda
+                </Text>
+                {loading && <Text style={styles.whiteText}>Chargement…</Text>}
                 {!loading && googleEvents.length === 0 && (
-                    <Text>Aucun événement prévu aujourd’hui</Text>
+                    <Text style={styles.whiteText}>Aucun événement prévu aujourd’hui</Text>
                 )}
                 {!loading && googleEvents.length > 0 &&
-                    googleEvents.map((event) => (
-                        <Text key={event.id}>
-                            {event.summary} – {formatDate(event.start)}
-                        </Text>
-                    ))}
+                    googleEvents.map((e) => renderEvent(e))}
                 <AppButton
                     title="Voir mon agenda Google"
                     onPress={() => router.push("/google-calendar")}
                 />
             </View>
 
-            <View style={styles.card}>
-                <Text style={styles.cardTitle}>Calendrier local</Text>
-                {loading && <Text>Chargement…</Text>}
+            <View
+                style={styles.card}
+            >
+                <Text  style={styles.cardTitle}>
+                    Agenda local
+                </Text>
+                {loading && <Text style={styles.whiteText}>Chargement…</Text>}
                 {!loading && localEvents.length === 0 && (
-                    <Text>Aucun événement prévu aujourd’hui</Text>
+                    <Text style={styles.whiteText}>Aucun événement prévu aujourd’hui</Text>
                 )}
                 {!loading && localEvents.length > 0 &&
-                    localEvents.map((event) => (
-                        <Text key={event.id}>
-                            {event.title} – {formatDate(event.startDate)}
-                        </Text>
-                    ))}
+                    localEvents.map((e) => renderEvent(e, true))}
                 <AppButton
                     title="Voir mon agenda local"
                     onPress={() => router.push("/local-calendar")}
                 />
             </View>
 
-            <View style={styles.card}>
+            <View style={styles.buttonContainer}>
                 <AppButton
                     title="Ajouter une activité"
                     onPress={() => router.push("/activities")}
