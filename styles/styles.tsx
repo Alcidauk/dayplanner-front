@@ -63,10 +63,6 @@ const styles = StyleSheet.create({
         boxShadow: "#000 0.05 4",
         elevation: 2,
     },
-    link: {
-        color: "blue",
-        marginBottom: 20,
-    },
     card: {
         padding: 16,
         borderRadius: 16,
