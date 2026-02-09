@@ -63,7 +63,7 @@ export default function UserInfo() {
                     <FlatList
                         data={userInfo.interests}
                         keyExtractor={(item, index) => index.toString()}
-                        renderItem={({ item }) => <Text style={styles.card}>• {item}</Text>}
+                        renderItem={({ item }) => <Text style={styles.card}>{item}</Text>}
                     />
                 </>
             ) : (<NoDataView/>)}
