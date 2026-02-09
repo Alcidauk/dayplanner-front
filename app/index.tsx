@@ -3,6 +3,7 @@ import styles from "@/styles/styles";
 import {useState} from "react";
 import {login, googleLogin} from "@/api/authApi";
 import AppButton from "@/components/app_button";
+import {router} from "expo-router";
 
 export default function Index() {
     const [email, setEmail] = useState("");
@@ -11,6 +12,7 @@ export default function Index() {
     return (
             <View style={styles.container}>
                 <Text style={styles.title}>DayPlanner Front</Text>
+                <AppButton title="Enregistrement" onPress={() => router.push("/register")} />
                 <Text style={styles.title}>Connexion</Text>
 
                 <TextInput
