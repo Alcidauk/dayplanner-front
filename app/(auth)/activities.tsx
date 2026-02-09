@@ -2,10 +2,10 @@ import {useState, useEffect} from "react";
 import {View, Text, FlatList, Platform, Modal, TextInput}
     from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import {addActivities, getActivities} from "@/api/activityApi";
+import {addActivities, getActivitiesFromDB, getActivitiesRecommendations} from "@/api/activityApi";
 import {addEventToGoogleCalendar} from "@/api/calendarApi";
 import styles from "@/styles/styles";
-import {Activity} from "@/api/types";
+import {Activity, ActivityListResponse} from "@/api/types";
 import {addEventToLocalCalendar} from "@/utils/localCalendar";
 import AppButton from "@/components/app_button";
 import LoadingView from "@/components/loading_view";
@@ -16,6 +16,7 @@ import {handleErrorMessages} from "@/utils/utils";
 
 export default function ActivitiesScreen() {
     const [activities, setActivities] = useState<Activity[]>([]);
+    const [activitiesFromDB, setActivitiesFromDB] = useState<Activity[]>([]);
     const [loading, setLoading] = useState(false);
     const [showPicker, setShowPicker] = useState(false);
     const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
@@ -38,7 +39,7 @@ export default function ActivitiesScreen() {
     const fetchActivities = async () => {
         try {
             setLoading(true);
-            const data = await getActivities();
+            const data = await getActivitiesRecommendations();
             setActivities(data ?? []);
         } catch (e: any) {
             const message = e?.response?.data?.detail
@@ -114,7 +115,6 @@ export default function ActivitiesScreen() {
                 });
 
                 showAlert("success", "Succès", "Événement ajouté à Google Agenda ");
-
             } else if (calendarTarget === "local") {
                 await addEventToLocalCalendar({
                     title: selectedActivity.title,
@@ -149,6 +149,14 @@ export default function ActivitiesScreen() {
         return <LoadingView/>
     }
 
+    useEffect(() => {
+        const fetchActivitiesFromDB = async () => {
+            const DBactivities: any = await getActivitiesFromDB();
+            setActivitiesFromDB(DBactivities)
+        }
+        fetchActivitiesFromDB()
+    }, []);
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Activités recommandées</Text>
@@ -162,10 +170,10 @@ export default function ActivitiesScreen() {
                     onPress={() => setShowCreateModal(true)}
                 />
             </View>
-            {activities.length ? (
+            {(activities?.length || activitiesFromDB?.length) ? (
                 <>
                     <FlatList
-                        data={activities}
+                        data={[...(activities || []), ...(activitiesFromDB || [])]}
                         keyExtractor={(_, i) => i.toString()}
                         renderItem={({item}) => (
                             <View style={styles.card}>

@@ -2,13 +2,22 @@ import { apiClient, authHeaders } from "./apiClient";
 import {Activity, ActivityListResponse} from "./types";
 import {requireAuth} from "@/utils/utils";
 
-export const getActivities = async () => {
+export const getActivitiesRecommendations = async () => {
     const token = await requireAuth();
     const response = await apiClient.get<ActivityListResponse>(
-        "/activity/activities",
+        "/activity/activities_openai",
         authHeaders(token)
     );
 
+    return response.data.activities;
+};
+
+export const getActivitiesFromDB = async (): Promise<Activity[]> => {
+    const token = await requireAuth();
+    const response = await apiClient.get(
+        "/activity/activities_manual",
+        authHeaders(token)
+    );
     return response.data.activities;
 };
 
