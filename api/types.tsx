@@ -5,6 +5,12 @@ export interface RegisterPayload {
     password: string;
 }
 
+export interface TokenData {
+    access_token: string;
+    refresh_token: string;
+    expires_at: number;
+}
+
 export interface LoginPayload {
     email: string;
     password: string;

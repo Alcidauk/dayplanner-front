@@ -1,30 +1,34 @@
-import {getToken, removeToken, storeToken} from "@/hooks/token";
+import {getAccessToken, clearTokens, storeTokens} from "@/hooks/token";
 import {apiClient, authHeaders} from "@/api/apiClient";
 import {Linking} from "react-native";
 import {API_URL} from "@/constants/constants";
 import {authEmitter, redirectHome, redirectIndex, showAlert} from "@/utils/utils";
-import {LoginPayload} from "@/api/types";
+import {LoginPayload, TokenData} from "@/api/types";
+import {tokenRefreshService} from "@/services/tokenRefreshService";
 
 
 export const login = async ({email, password}:LoginPayload) => {
     try {
-        const res = await fetch(`${API_URL}/auth/login`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password }),
+        const response =    await apiClient.post(`${API_URL}/auth/login`, {
+            email,
+            password
         });
 
-        if (!res.ok) {
-            showAlert("Error","Login failed");
-        }
-        const data = await res.json();
-        await storeToken(data.access_token)
+        const { access_token, refresh_token, expires_in } = response.data;
+        await storeTokens(access_token, refresh_token, expires_in || 3600);
+        tokenRefreshService.start();
         authEmitter.emit("authChanged");
         redirectHome()
     } catch (e: any) {
-        showAlert("Erreur",`Erreur de connexion: ${e.message || JSON.stringify(e)}`);
+        showAlert("Erreur", `Erreur de connexion: ${e.message}`);
     }
 };
+
+export const refreshToken = async (tokenData: TokenData) => {
+    return await apiClient.post(`${API_URL}/auth/refresh`, {
+        refresh_token: tokenData.refresh_token,
+    });
+}
 
 export const googleLogin = async () => {
     const url = `${API_URL}/auth/google/login`;
@@ -33,18 +37,17 @@ export const googleLogin = async () => {
 };
 
 export const logout = async () => {
-    const token = await getToken();
-
+    tokenRefreshService.stop();
+    const token = await getAccessToken();
     if (token) {
         try {
             await apiClient.post(`${API_URL}/auth/logout`, {}, authHeaders(token));
-            removeToken();
-            logout();
         } catch (error) {
             showAlert("Erreur", "Logout backend failed, continuing local logout");
         } finally {
-            redirectIndex();
+            await clearTokens();
             authEmitter.emit("authChanged");
+            redirectIndex();
             showAlert("Info", "Utilisateur déconnecté");
         }
     } else {

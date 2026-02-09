@@ -3,7 +3,7 @@ import {View, Text, ActivityIndicator} from "react-native";
 import { useLocalSearchParams} from "expo-router";
 import styles from "@/styles/styles";
 import {authEmitter, redirectHome, redirectIndex} from "@/utils/utils";
-import {storeToken} from "@/hooks/token";
+import {storeTokens} from "@/hooks/token";
 
 export default function GoogleCallback() {
     const { token } = useLocalSearchParams<{ token?: string }>();
@@ -15,7 +15,7 @@ export default function GoogleCallback() {
                 return;
             }
 
-            await storeToken(token);
+            await storeTokens(token);
             authEmitter.emit("authChanged");
             redirectHome();
         };

@@ -3,54 +3,65 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import {showAlert} from "@/utils/utils";
 import { jwtDecode } from 'jwt-decode';
 import {logout} from "@/api/authApi";
+import {TokenData} from "@/api/types";
 
-export const getToken = async (): Promise<string | null> => {
-    let token: string | null;
-
-    if (Platform.OS === "web") {
-        token = localStorage.getItem("jwt");
-    } else {
-        token = await AsyncStorage.getItem("jwt");
-    }
-    if (!token) return null;
+export const getTokenData = async (): Promise<TokenData | null> => {
     try {
-        const decoded = jwtDecode(token);
-        const currentTime = Date.now() / 1000;
+        let data: string | null;
 
-        if (decoded.exp && decoded.exp < currentTime) {
-            removeToken();
-            logout();
-            showAlert("Info", "Token Expiré");
-            return null;
+        if (Platform.OS === "web") {
+            data = localStorage.getItem("auth_tokens");
+        } else {
+            data = await AsyncStorage.getItem("auth_tokens");
         }
-        return token;
+
+        return data ? JSON.parse(data) : null;
     } catch (error) {
-        removeToken();
-        logout();
-        showAlert("Erreur", `Erreur lors du décodage du token:', ${error}`);
+        console.error("Error getting token data:", error);
         return null;
     }
 };
 
-export const removeToken = async () => {
+export const getRefreshToken = async (): Promise<string | null> => {
+    const tokenData = await getTokenData();
+    return tokenData?.refresh_token || null;
+};
+
+export const getAccessToken = async (): Promise<string | null> => {
+    const tokenData = await getTokenData();
+    return tokenData?.access_token || null;
+};
+
+export const isTokenExpired = async (bufferSeconds: number = 300): Promise<boolean> => {
+    const tokenData = await getTokenData();
+    if (!tokenData) return true;
+    return Date.now() >= (tokenData.expires_at - bufferSeconds * 1000);
+};
+
+
+export const clearTokens = async () => {
     try {
         if (Platform.OS === "web") {
-            localStorage.removeItem("jwt");
+            localStorage.removeItem("auth_tokens");
         } else {
-            await AsyncStorage.removeItem("jwt");
+            await AsyncStorage.removeItem("auth_tokens");
         }
     } catch (error: any) {
         showAlert('error', error.response?.data?.detail)}
 }
 
-export const storeToken = async (token: string | undefined) => {
+export const storeTokens = async (accessToken: string, refreshToken: string, expiresIn: number = 3600) => {
     try {
-        if (typeof token === "string") {
-            if (Platform.OS === "web") {
-                localStorage.setItem("jwt", token);
-            } else {
-                await AsyncStorage.setItem("jwt", token);
-            }
+        const expiresAt = Date.now() + (expiresIn * 1000);
+        const tokenData: TokenData = {
+            access_token: accessToken,
+            refresh_token: refreshToken,
+            expires_at: expiresAt
+        };
+        if (Platform.OS === "web") {
+            localStorage.setItem("auth_tokens", JSON.stringify(tokenData));
+        } else {
+            await AsyncStorage.setItem("auth_tokens", JSON.stringify(tokenData));
         }
     } catch (error: any) {
         let message = "Erreur inconnue";

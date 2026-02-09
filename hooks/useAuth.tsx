@@ -1,15 +1,15 @@
 import {useEffect, useState} from "react";
 import { authEmitter } from "@/utils/utils";
-import {getToken} from "@/hooks/token";
+import {getAccessToken} from "@/hooks/token";
 
 export const useAuth = () => {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
     useEffect(() => {
-        let token = getToken()
+        let token = getAccessToken()
         setIsAuthenticated(!!token);
 
-        const listener = () => getToken();
+        const listener = () => getAccessToken();
         authEmitter.addListener("authChanged", listener);
 
         return () => {
@@ -17,5 +17,5 @@ export const useAuth = () => {
         };
     }, []);
 
-    return { isAuthenticated, getToken };
+    return { isAuthenticated, getToken: getAccessToken };
 };

@@ -3,11 +3,11 @@ import {RegisterPayload, UserCreate, UserResponse} from "@/api/types";
 import {apiClient, authHeaders} from "@/api/apiClient";
 import {showAlert} from "@/utils/utils";
 import axios from "axios";
-import {getToken} from "@/hooks/token";
+import {getAccessToken} from "@/hooks/token";
 
 
 export const getCurrentUser = async () : Promise<UserResponse>  => {
-    const token = await getToken();
+    const token = await getAccessToken();
     const response = await apiClient.get("/user/current_user", authHeaders(token));
     return response.data;
 };
