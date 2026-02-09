@@ -106,37 +106,14 @@ export default function ActivitiesScreen() {
     if (loading) {
         return <LoadingView/>
     }
-    const MOCK_ACTIVITIES: Activity[] = [
-        {
-            id: 1,
-            title: "Cours de yoga en plein air",
-            description: "Séance de yoga tous niveaux dans un parc",
-            duration: "1 heure",
-            location: "Parc Monceau, Paris",
-        },
-        {
-            id: 2,
-            title: "Concert jazz",
-            description: "Concert live avec un groupe local",
-            duration: "2 heures",
-            location: "New Morning, Paris",
-        },
-        {
-            id: 3,
-            title: "Exposition photo",
-            description: "Exposition de photographies contemporaines",
-            duration: "1 heure",
-            location: "Galerie 13, Paris",
-        },
-    ];
 
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Activités recommandées</Text>
-            {MOCK_ACTIVITIES.length ? ( // {activities.length ? (
+            {activities.length ? (
                 <>
                     <FlatList
-                        data={MOCK_ACTIVITIES} //activities
+                        data={activities}
                         keyExtractor={(_, i) => i.toString()}
                         renderItem={({item}) => (
                             <View style={styles.card}>
