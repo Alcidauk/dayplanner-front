@@ -46,7 +46,7 @@ class TokenRefreshService {
         try {
             const tokenData = await getTokenData();
             if (!tokenData?.refresh_token) {
-                console.error('❌ No refresh token available');
+                console.error("Pas de refresh token disponible");
                 await this.handleRefreshFailure();
                 return false;
             }

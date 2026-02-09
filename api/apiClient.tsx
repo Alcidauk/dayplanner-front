@@ -20,7 +20,7 @@ apiClient.interceptors.request.use(
         const expired = await isTokenExpired(60);
 
         if (expired) {
-            console.log('⚠️ Token expired, refreshing before request...');
+            console.log('Token expired, refreshing before request...');
             await tokenRefreshService.refreshToken();
         }
 
