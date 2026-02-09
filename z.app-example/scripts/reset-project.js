@@ -9,6 +9,8 @@
 const fs = require("fs");
 const path = require("path");
 const readline = require("readline");
+const {handleErrorMessages} = require("../../utils/utils");
+const {showAlert} = require("../../utils/alertManager");
 
 const root = process.cwd();
 const oldDirs = ["app", "components", "hooks", "constants", "scripts"];
@@ -94,7 +96,8 @@ const moveDirectories = async (userInput) => {
       }`
     );
   } catch (error) {
-    console.error(`❌ Error during script execution: ${error.message}`);
+    let message = handleErrorMessages(error)
+    showAlert('error', "Erreur", message);
   }
 };
 

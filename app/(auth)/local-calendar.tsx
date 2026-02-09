@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { View, Text, FlatList, ActivityIndicator } from "react-native";
+import { View, Text, FlatList } from "react-native";
 import styles from "@/styles/styles";
 import {getLocalCalendarEvents} from "@/utils/localCalendar";
-import {formatDate, redirectHome} from "@/utils/utils";
+import {formatDate, handleErrorMessages} from "@/utils/utils";
 import LoadingView from "@/components/loading_view";
 import NoDataView from "@/components/no_data_view";
+import {showAlert} from "@/utils/alertManager";
 
 export default function LocalCalendarScreen() {
     const [events, setEvents] = useState<any[]>([]);
@@ -16,6 +17,8 @@ export default function LocalCalendarScreen() {
                 const data = await getLocalCalendarEvents();
                 setEvents(data);
             } catch (error: any) {
+                let message = handleErrorMessages(error)
+                showAlert('error','Erreur', message);
                 console.error(error);
             } finally {
                 setLoading(false);

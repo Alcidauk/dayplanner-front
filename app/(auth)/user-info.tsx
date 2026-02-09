@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import {Text, TextInput, View, FlatList} from "react-native";
 import {addUserInfo, getUserInfo} from "@/api/userInfoApi";
-import {redirectHome} from "@/utils/utils";
+import {handleErrorMessages, redirectHome} from "@/utils/utils";
 import styles from "@/styles/styles";
 import {UserInfoResponse} from "@/api/types";
 import AppButton from "@/components/app_button";
@@ -44,7 +44,8 @@ export default function UserInfo() {
             const response = await addUserInfo(data);
             showAlert("success", "Succès", "Informations mises à jour !");
         } catch (error: any) {
-            showAlert("error", "Erreur", error.response?.data?.detail || "Erreur serveur");
+            let message = handleErrorMessages(error)
+            showAlert("error", "Erreur", message);
         } finally {
             setLoading(false);
         }

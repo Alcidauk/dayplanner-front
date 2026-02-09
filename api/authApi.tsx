@@ -2,7 +2,7 @@ import {getAccessToken, clearTokens, storeTokens} from "@/hooks/token";
 import {apiClient, authHeaders} from "@/api/apiClient";
 import {Linking} from "react-native";
 import {API_URL} from "@/constants/constants";
-import {authEmitter, redirectHome, redirectIndex} from "@/utils/utils";
+import {authEmitter, handleErrorMessages, redirectHome, redirectIndex} from "@/utils/utils";
 import {LoginPayload, TokenData} from "@/api/types";
 import {tokenRefreshService} from "@/services/tokenRefreshService";
 import { showAlert } from '@/utils/alertManager';
@@ -44,7 +44,8 @@ export const logout = async () => {
         try {
             await apiClient.post(`${API_URL}/auth/logout`, {}, authHeaders(token));
         } catch (error) {
-            showAlert('error', "Erreur", "Logout backend failed, continuing local logout");
+            let message = handleErrorMessages(error)
+            showAlert('error', "Erreur", ` ${message}: Logout backend failed, continuing local logout`);
         } finally {
             await clearTokens();
             authEmitter.emit("authChanged");

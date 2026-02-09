@@ -4,6 +4,19 @@ import { EventEmitter } from "events";
 import {getAccessToken} from "@/hooks/token";
 import {showAlert} from "@/utils/alertManager";
 
+
+export const handleErrorMessages = (error: any) => {
+    let message = "Erreur inconnue";
+    if (error instanceof Error) {
+        message = error.message;
+    } else if (error?.response?.data?.detail) {
+        message = error.response.data.detail;
+    } else {
+        message = JSON.stringify(error);
+    }
+    return message
+}
+
 export const redirectHome = (delay = 50) => {
     setTimeout(() => {
         router.replace("/(auth)");
@@ -27,7 +40,8 @@ export const requireAuth = async (): Promise<string | null> => {
         }
         return token;
     } catch (error) {
-        showAlert("error", "Erreur", "Impossible de récupérer le token");
+        let message = handleErrorMessages(error)
+        showAlert("error", "Erreur", message);
         redirectIndex();
         return null;
     }

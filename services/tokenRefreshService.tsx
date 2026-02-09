@@ -1,6 +1,7 @@
 import { getTokenData, storeTokens, clearTokens, isTokenExpired } from '@/hooks/token';
-import { authEmitter } from '@/utils/utils';
+import {authEmitter, handleErrorMessages} from '@/utils/utils';
 import {refreshToken} from "@/api/authApi";
+import {showAlert} from "@/utils/alertManager";
 
 class TokenRefreshService {
     private refreshTimer: number = 0;
@@ -58,7 +59,8 @@ class TokenRefreshService {
             this.scheduleNextRefresh();
             return true;
         } catch (error) {
-            console.error('❌ Error refreshing token:', error);
+            let message = handleErrorMessages(error)
+            showAlert('error', "Erreur", message)
             await this.handleRefreshFailure();
             return false;
         } finally {

@@ -2,6 +2,7 @@ import {Platform} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {TokenData} from "@/api/types";
 import {showAlert} from "@/utils/alertManager";
+import {handleErrorMessages} from "@/utils/utils";
 
 export const getTokenData = async (): Promise<TokenData | null> => {
     try {
@@ -15,7 +16,8 @@ export const getTokenData = async (): Promise<TokenData | null> => {
 
         return data ? JSON.parse(data) : null;
     } catch (error) {
-        console.error("Error getting token data:", error);
+        let message = handleErrorMessages(error)
+        showAlert('error', 'Erreur', message)
         return null;
     }
 };
@@ -45,7 +47,8 @@ export const clearTokens = async () => {
             await AsyncStorage.removeItem("auth_tokens");
         }
     } catch (error: any) {
-        showAlert('error', 'Erreur', error.response?.data?.detail)}
+        let message = handleErrorMessages(error)
+        showAlert('error', 'Erreur', message)}
 }
 
 export const storeTokens = async (accessToken: string, refreshToken: string, expiresIn: number = 3600) => {
@@ -62,14 +65,7 @@ export const storeTokens = async (accessToken: string, refreshToken: string, exp
             await AsyncStorage.setItem("auth_tokens", JSON.stringify(tokenData));
         }
     } catch (error: any) {
-        let message = "Erreur inconnue";
-        if (error instanceof Error) {
-            message = error.message;
-        } else if (error?.response?.data?.detail) {
-            message = error.response.data.detail;
-        } else {
-            message = JSON.stringify(error);
-        }
+        let message = handleErrorMessages(error)
         showAlert('error','Erreur', message)
     }
 };
