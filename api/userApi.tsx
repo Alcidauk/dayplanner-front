@@ -14,8 +14,8 @@ export const getCurrentUser = async () : Promise<UserResponse>  => {
 
 
 export const createUser = async (userData: UserCreate): Promise<UserResponse> => {
-    const response = await apiClient.put(
-        `${API_URL}/user`,
+    const response = await apiClient.post(
+        `${API_URL}/user/register`,
         userData
     );
     return response.data;

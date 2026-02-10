@@ -6,7 +6,7 @@ import {requireAuth} from "@/utils/utils";
 
 export const addUserInfo = async (data: UserInfoCreate) => {
     const token = await requireAuth();
-    const response = await apiClient.put(
+    const response = await apiClient.post(
         `${API_URL}/user/user_info`,
         data,
         authHeaders(token)

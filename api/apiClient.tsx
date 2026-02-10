@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_URL } from "@/constants/constants";
+import {API_URL, PUBLIC_ENDPOINTS} from "@/constants/constants";
 import {getAccessToken, isTokenExpired} from "@/hooks/token";
 import {tokenRefreshService} from "@/services/tokenRefreshService";
 
@@ -17,22 +17,32 @@ export const authHeaders = (token: string | null) => ({
 
 apiClient.interceptors.request.use(
     async (config) => {
-        const expired: boolean = await isTokenExpired(60);
+        const isPublicEndpoint = PUBLIC_ENDPOINTS.some(
+            (endpoint) => config.url?.startsWith(endpoint)
+        );
 
-        if (expired) {
-            console.log('Token expired, refreshing before request...');
-            await tokenRefreshService.refreshToken();
+        if (isPublicEndpoint) {
+            return config;
         }
 
         const token: string | null = await getAccessToken();
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
+        if (!token) {
+            return config;
         }
+
+        const expired = await isTokenExpired(60);
+        if (expired) {
+            await tokenRefreshService.refreshToken();
+        }
+
+        const freshToken = await getAccessToken();
+        if (!freshToken) {
+            return config;
+        }
+        config.headers.Authorization = `Bearer ${freshToken}`;
         return config;
     },
-    (error) => {
-        return Promise.reject(error);
-    }
+    Promise.reject
 );
 
 apiClient.interceptors.response.use(

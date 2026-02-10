@@ -2,7 +2,7 @@ import {Stack, useSegments} from "expo-router";
 import {useEffect, useState} from "react";
 import LoadingView from "@/components/loading_view";
 import {tokenRefreshService} from "@/services/tokenRefreshService";
-import {getAccessToken} from "@/hooks/token";
+import {getAccessToken, getRefreshToken} from "@/hooks/token";
 import {authEmitter, redirectHome, redirectIndex} from "@/utils/utils";
 import { AlertProvider } from "@/contexts/AlertContext";
 
@@ -12,8 +12,10 @@ export default function RootLayout() {
     const segments = useSegments();
 
     const checkAuth = async () => {
-        const token = await getAccessToken();
-        const authenticated = !!token;
+        const token: string | null = await getAccessToken();
+        const refreshToken: string | null = await getRefreshToken();
+
+        const authenticated: boolean = !!token && !!refreshToken;
 
         setIsAuthenticated(authenticated);
         setIsLoading(false);
