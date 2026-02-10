@@ -20,7 +20,7 @@ export default function UserInfo() {
             const data = await getUserInfo();
             setUserInfo(data ?? []);
         } catch (error: any) {
-            let message = handleErrorMessages(error)
+            let message: string = handleErrorMessages(error)
             showAlert('error','Erreur', message);
         } finally {
             setLoading(false);
@@ -44,7 +44,7 @@ export default function UserInfo() {
             const response = await addUserInfo(data);
             showAlert("success", "Succès", "Informations mises à jour !");
         } catch (error: any) {
-            let message = handleErrorMessages(error)
+            let message: string = handleErrorMessages(error)
             showAlert("error", "Erreur", message);
         } finally {
             setLoading(false);

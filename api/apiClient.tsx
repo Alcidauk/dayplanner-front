@@ -17,14 +17,14 @@ export const authHeaders = (token: string | null) => ({
 
 apiClient.interceptors.request.use(
     async (config) => {
-        const expired = await isTokenExpired(60);
+        const expired: boolean = await isTokenExpired(60);
 
         if (expired) {
             console.log('Token expired, refreshing before request...');
             await tokenRefreshService.refreshToken();
         }
 
-        const token = await getAccessToken();
+        const token: string | null = await getAccessToken();
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }

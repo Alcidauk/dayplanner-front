@@ -6,7 +6,7 @@ import {showAlert} from "@/utils/alertManager";
 
 
 export const handleErrorMessages = (error: any) => {
-    let message = "Erreur inconnue";
+    let message: string = "Erreur inconnue";
     if (error instanceof Error) {
         message = error.message;
     } else if (error?.response?.data?.detail) {
@@ -40,7 +40,7 @@ export const requireAuth = async (): Promise<string | null> => {
         }
         return token;
     } catch (error) {
-        let message = handleErrorMessages(error)
+        let message: string = handleErrorMessages(error)
         showAlert("error", "Erreur", message);
         redirectIndex();
         return null;

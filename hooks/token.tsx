@@ -16,24 +16,24 @@ export const getTokenData = async (): Promise<TokenData | null> => {
 
         return data ? JSON.parse(data) : null;
     } catch (error) {
-        let message = handleErrorMessages(error)
+        let message: string = handleErrorMessages(error)
         showAlert('error', 'Erreur', message)
         return null;
     }
 };
 
 export const getRefreshToken = async (): Promise<string | null> => {
-    const tokenData = await getTokenData();
+    const tokenData: TokenData | null = await getTokenData();
     return tokenData?.refresh_token || null;
 };
 
 export const getAccessToken = async (): Promise<string | null> => {
-    const tokenData = await getTokenData();
+    const tokenData: TokenData | null = await getTokenData();
     return tokenData?.access_token || null;
 };
 
 export const isTokenExpired = async (bufferSeconds: number = 300): Promise<boolean> => {
-    const tokenData = await getTokenData();
+    const tokenData: TokenData | null = await getTokenData();
     if (!tokenData) return true;
     return Date.now() >= (tokenData.expires_at - bufferSeconds * 1000);
 };
@@ -47,13 +47,13 @@ export const clearTokens = async () => {
             await AsyncStorage.removeItem("auth_tokens");
         }
     } catch (error: any) {
-        let message = handleErrorMessages(error)
+        let message: string = handleErrorMessages(error)
         showAlert('error', 'Erreur', message)}
 }
 
 export const storeTokens = async (accessToken: string, refreshToken: string, expiresIn: number = 3600) => {
     try {
-        const expiresAt = Date.now() + (expiresIn * 1000);
+        const expiresAt: number = Date.now() + (expiresIn * 1000);
         const tokenData: TokenData = {
             access_token: accessToken,
             refresh_token: refreshToken,
@@ -65,7 +65,7 @@ export const storeTokens = async (accessToken: string, refreshToken: string, exp
             await AsyncStorage.setItem("auth_tokens", JSON.stringify(tokenData));
         }
     } catch (error: any) {
-        let message = handleErrorMessages(error)
+        let message: string = handleErrorMessages(error)
         showAlert('error','Erreur', message)
     }
 };

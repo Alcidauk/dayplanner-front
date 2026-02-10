@@ -22,7 +22,7 @@ export const login = async ({email, password}:LoginPayload) => {
         showAlert('success',"Succès","Connexion réussie !");
         redirectHome()
     } catch (error: any) {
-        let message = handleErrorMessages(error)
+        let message: string = handleErrorMessages(error)
         showAlert('error','Erreur', message);
     }
 };
@@ -45,7 +45,7 @@ export const logout = async () => {
         try {
             await apiClient.post(`${API_URL}/auth/logout`, {}, authHeaders(token));
         } catch (error) {
-            let message = handleErrorMessages(error)
+            let message: string = handleErrorMessages(error)
             showAlert('error', "Erreur", ` ${message}: Logout backend failed, continuing local logout`);
         } finally {
             await clearTokens();

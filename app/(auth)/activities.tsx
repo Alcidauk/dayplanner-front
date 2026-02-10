@@ -42,7 +42,7 @@ export default function ActivitiesScreen() {
             const data = await getActivitiesRecommendations();
             setActivities(data ?? []);
         } catch (error: any) {
-            let message = handleErrorMessages(error)
+            let message: string = handleErrorMessages(error)
             showAlert('error', 'Erreur', message);
         } finally {
             setLoading(false);
@@ -72,7 +72,7 @@ export default function ActivitiesScreen() {
                 console.log("activity:", activityToAdd)
                 await addActivities(activityToAdd)
             } catch (error: unknown) {
-                let message = handleErrorMessages(error)
+                let message: string = handleErrorMessages(error)
                 showAlert('error', "Erreur", message)
             }
             setNewActivity({
@@ -85,7 +85,7 @@ export default function ActivitiesScreen() {
             showAlert("success", "Succès", "Activité créée avec succès");
 
         } catch (error: any) {
-            let message = handleErrorMessages(error)
+            let message: string = handleErrorMessages(error)
             showAlert("error", "Erreur", message);
         }
     };
@@ -130,7 +130,7 @@ export default function ActivitiesScreen() {
                 showAlert("success", "Succès", "Événement ajouté à l'agenda du téléphone");
             }
         } catch (error: any) {
-            let message = handleErrorMessages(error)
+            let message: string = handleErrorMessages(error)
             showAlert('error','Erreur', message);
         } finally {
             setShowPicker(false);
@@ -151,7 +151,7 @@ export default function ActivitiesScreen() {
                 setActivitiesFromDB(DBactivities)
             }
             catch (error) {
-                let message = handleErrorMessages(error)
+                let message: string = handleErrorMessages(error)
                 showAlert("error", "Erreur", message)
             }
         }

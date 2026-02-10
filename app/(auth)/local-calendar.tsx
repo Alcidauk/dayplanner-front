@@ -17,7 +17,7 @@ export default function LocalCalendarScreen() {
                 const data = await getLocalCalendarEvents();
                 setEvents(data);
             } catch (error: any) {
-                let message = handleErrorMessages(error)
+                let message: string = handleErrorMessages(error)
                 showAlert('error','Erreur', message);
                 console.error(error);
             } finally {

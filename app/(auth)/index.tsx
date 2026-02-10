@@ -48,7 +48,7 @@ export default function TodayDashboard() {
                     setLocalEvents(localData);
                 }
             } catch (error) {
-                let message = handleErrorMessages(error);
+                let message: string = handleErrorMessages(error);
                 showAlert('error', "Erreur", message);
             } finally {
                 setLoading(false);

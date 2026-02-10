@@ -7,6 +7,7 @@ import {formatDate} from "@/utils/utils";
 import LoadingView from "@/components/loading_view";
 import NoDataView from "@/components/no_data_view";
 import {showAlert} from "@/utils/alertManager";
+import {CalendarEvent} from "@/api/types";
 
 export default function CalendarScreen() {
     const [events, setEvents] = useState<any[]>([]);
@@ -16,7 +17,7 @@ export default function CalendarScreen() {
     useEffect(() => {
         const fetchEvents = async () => {
             try {
-                const response = await getGoogleCalendarEvents();
+                const response: CalendarEvent[] = await getGoogleCalendarEvents();
                 setEvents(response);
             } catch (error: unknown) {
                 if (axios.isAxiosError(error)) {
