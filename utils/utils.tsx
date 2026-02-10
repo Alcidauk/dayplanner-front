@@ -13,6 +13,8 @@ export const handleErrorMessages = (error: any) => {
         message = error.response.data.detail;
     } else if (error?.response?.detail) {
         message = error.response.detail;
+    } else if (error?.detail) {
+        message = error.detail;
     } else {
         message = JSON.stringify(error);
     }
