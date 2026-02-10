@@ -14,7 +14,6 @@ export default function UserInfo() {
     const [userInfo, setUserInfo] = useState<UserInfoResponse | null>(null);
     const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
     const fetchUserInfo = async () => {
         try {
             const data = await getUserInfo();
@@ -26,7 +25,8 @@ export default function UserInfo() {
             setLoading(false);
         }
     };
-    fetchUserInfo();
+    useEffect(() => {
+        fetchUserInfo();
     }, []);
 
     const handleSubmit = async () => {
@@ -49,6 +49,7 @@ export default function UserInfo() {
         } finally {
             setLoading(false);
         }
+        fetchUserInfo()
         redirectHome()
     };
 
