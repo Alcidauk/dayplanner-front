@@ -4,6 +4,7 @@ import {apiClient, authHeaders} from "@/api/apiClient";
 import axios from "axios";
 import {getAccessToken} from "@/hooks/token";
 import {showAlert} from "@/utils/alertManager";
+import {handleErrorMessages} from "@/utils/utils";
 
 
 export const getCurrentUser = async () : Promise<UserResponse>  => {
@@ -36,9 +37,11 @@ export const register = async ({name, surname, email, password}: RegisterPayload
 
     } catch (error: unknown) {
         if (axios.isAxiosError(error)) {
-            showAlert("error", "Erreur", error.response?.data?.detail ?? "Erreur serveur");
+            let message = handleErrorMessages(error)
+            showAlert("error", "Erreur", message);
         } else {
-            showAlert("error","Erreur", "Erreur inconnue");
+            let message = handleErrorMessages(error)
+            showAlert("error","Erreur", message);
         }
     }
 };
