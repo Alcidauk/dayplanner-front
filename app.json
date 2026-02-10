@@ -6,11 +6,19 @@
     "orientation": "portrait",
     "icon": "./assets/images/dayplanner_image.png",
     "scheme": "dayplanner-front",
-    "platforms": ["ios", "android", "web"],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.dayplannerfront",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -20,7 +28,7 @@
         "monochromeImage": "./assets/images/dayplanner_image.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "package": "com.anonymous.dayplannerfront"
     },
     "web": {
       "output": "static",
@@ -28,6 +36,11 @@
     },
     "plugins": [
       "expo-router",
+      ["expo-build-properties", {
+        "android": {
+          "usesCleartextTraffic": true
+        }
+      }],
       [
         "expo-splash-screen",
         {
@@ -44,6 +57,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "0a0d2393-f870-4e31-8a8b-1ca61c2cd89c"
+      }
     }
   }
 }

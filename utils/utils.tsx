@@ -1,4 +1,3 @@
-import {Alert, Platform} from "react-native";
 import { router } from "expo-router";
 import { EventEmitter } from "events";
 import {getAccessToken} from "@/hooks/token";
@@ -15,6 +14,8 @@ export const handleErrorMessages = (error: any) => {
         message = error.response.detail;
     } else if (error?.detail) {
         message = error.detail;
+    } else if (error?.error) {
+            message = error.error;
     } else {
         message = JSON.stringify(error);
     }
