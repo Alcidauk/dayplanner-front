@@ -17,7 +17,6 @@ export const authHeaders = (token: string | null) => ({
 
 apiClient.interceptors.request.use(
     async (config) => {
-        console.log("Axios URL:", config.url);
         const isPublicEndpoint = PUBLIC_ENDPOINTS.some(
             (endpoint) => config.url?.includes(endpoint)
         );

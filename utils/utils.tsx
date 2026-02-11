@@ -6,16 +6,24 @@ import {showAlert} from "@/utils/alertManager";
 
 export const handleErrorMessages = (error: any) => {
     let message: string = "Erreur inconnue";
-    if (error instanceof Error) {
-        message = error.message;
-    } else if (error?.response?.data?.detail) {
+    if (error?.response?.data?.detail) {
         message = error.response.data.detail;
-    } else if (error?.response?.detail) {
-        message = error.response.detail;
-    } else if (error?.detail) {
+    }
+    else if (error?.response?.data) {
+        if (typeof error.response.data === 'string') {
+            message = error.response.data;
+        } else {
+            message = JSON.stringify(error.response.data);
+        }
+    }
+    else if (error instanceof Error) {
+        message = error.message;
+    }
+    else if (error?.detail) {
         message = error.detail;
-    } else if (error?.error) {
-            message = error.error;
+    }
+    else if (error?.error) {
+        message = error.error;
     } else {
         message = JSON.stringify(error);
     }
