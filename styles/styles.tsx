@@ -7,6 +7,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    flatContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
     logo: {
         width: 50,
         height:50,
@@ -57,7 +61,8 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "#ccc",
         padding: 12,
-        marginBottom: 12,
+        marginVertical: 10,
+        marginHorizontal: 20,
         borderRadius: 6,
         backgroundColor: "#fff",
         boxShadow: "#000 0.05 4",
@@ -99,24 +104,6 @@ const styles = StyleSheet.create({
         fontSize: 12,
         marginTop: 20,
         opacity: 0.6,
-    },
-    modalGeneral: {
-        flex: 1,
-        backgroundColor: "rgba(0,0,0,0.4)",
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    modalBody: {
-        backgroundColor: "white",
-        padding: 20,
-        borderRadius: 12,
-        width: "100%",
-        maxWidth: 400,
-    },
-    modalText: {
-        fontSize: 18,
-        fontWeight: "600",
-        marginBottom: 10
     },
     overlay: {
         flex: 1,
@@ -188,6 +175,37 @@ const styles = StyleSheet.create({
     textArea: {
         height: 100,
         textAlignVertical: 'top',
+    },
+    noData: {
+        fontSize: 14,
+        color: '#999',
+        fontStyle: 'italic',
+        marginBottom: 10,
+    },
+    interestsList: {
+        maxHeight: 200,
+        marginBottom: 20,
+    },
+    interestItem: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    removeButton: {
+        backgroundColor: '#ff4444',
+        width: 50,
+        height: 50,
+        borderRadius: 14,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: 10,
+    },
+    addButton: {
+        backgroundColor: '#4CAF50',
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });
 export default styles

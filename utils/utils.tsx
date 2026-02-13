@@ -2,12 +2,30 @@ import { router } from "expo-router";
 import { EventEmitter } from "events";
 import {getAccessToken} from "@/hooks/token";
 import {showAlert} from "@/utils/alertManager";
+import {useFocusEffect} from "@react-navigation/core";
+import {useCallback} from "react";
 
 
 export const handleErrorMessages = (error: any) => {
     let message: string = "Erreur inconnue";
     if (error?.response?.data?.detail) {
-        message = error.response.data.detail;
+        const detail = error.response.data.detail;
+        if (Array.isArray(detail)) {
+            message = detail.map((err: any) => {
+                if (typeof err === 'string') return err;
+                if (err.msg) {
+                    const location = err.loc ? err.loc.join(' -> ') : '';
+                    return location ? `${location}: ${err.msg}` : err.msg;
+                }
+                return JSON.stringify(err);
+            }).join('\n');
+        }
+        else if (typeof detail === 'string') {
+            message = detail;
+        }
+        else if (typeof detail === 'object') {
+            message = detail.msg || detail.message || JSON.stringify(detail);
+        }
     }
     else if (error?.response?.data) {
         if (typeof error.response.data === 'string') {
@@ -70,3 +88,11 @@ export const formatDate = (dateStr: string) => {
 };
 
 export const authEmitter = new EventEmitter();
+
+export const reloadPageData = (functionToApply: Function) => {
+    useFocusEffect(
+        useCallback(() => {
+            functionToApply();
+        }, [functionToApply])
+    );
+}
