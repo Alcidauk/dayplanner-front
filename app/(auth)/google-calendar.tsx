@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
-import { View, Text, FlatList, ActivityIndicator } from "react-native";
+import {useState} from "react";
+import { View, Text, FlatList } from "react-native";
 import { getGoogleCalendarEvents } from "@/api/calendarApi";
 import styles from "@/styles/styles";
-import axios from "axios";
-import {formatDate} from "@/utils/utils";
+import {formatDate, handleErrorMessages, reloadPageData} from "@/utils/utils";
 import LoadingView from "@/components/loading_view";
 import NoDataView from "@/components/no_data_view";
 import {showAlert} from "@/utils/alertManager";
@@ -13,27 +12,21 @@ export default function CalendarScreen() {
     const [events, setEvents] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
-
-    useEffect(() => {
-        const fetchEvents = async () => {
-            try {
-                const response: CalendarEvent[] = await getGoogleCalendarEvents();
-                setEvents(response);
-            } catch (error: unknown) {
-                if (axios.isAxiosError(error)) {
-                    showAlert("error", "Erreur", error.response?.data?.detail ?? "Erreur serveur");
-                } else {
-                    showAlert("error", "Erreur", "Erreur inconnue");
-                }
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchEvents();
-    }, []);
+    const fetchEvents = async () => {
+        try {
+            const response: CalendarEvent[] = await getGoogleCalendarEvents();
+            setEvents(response);
+        } catch (error: unknown) {
+            let message: string = handleErrorMessages(error)
+            showAlert("error", "Erreur", message);
+        } finally {
+            setLoading(false);
+        }
+    };
+    reloadPageData(fetchEvents)
 
     if (loading) {
-        <LoadingView/>
+        return <LoadingView/>
     }
 
     return (
