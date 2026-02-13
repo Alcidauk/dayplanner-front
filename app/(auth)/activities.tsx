@@ -36,10 +36,10 @@ export default function ActivitiesScreen() {
         setCalendarTarget(target);
         setShowPicker(true);
     };
-    const fetchActivities = async () => {
+    const fetchActivities = async (source: "openai" | "ollama") => {
         try {
             setLoading(true);
-            const data = await getActivitiesRecommendations();
+            const data = await getActivitiesRecommendations(source);
             setActivities(data ?? []);
         } catch (error: any) {
             let message: string = handleErrorMessages(error)
@@ -166,12 +166,19 @@ export default function ActivitiesScreen() {
         <View style={styles.container}>
             <Text style={styles.title}>Activités recommandées</Text>
             <AppButton
-                title="Me recommander des activités"
-                onPress={() => fetchActivities()}
+                title="Me recommander des activités via OpenAI"
+                disabled={false}
+                onPress={() => fetchActivities("openai")}
+            />
+            <AppButton
+                title="Me recommander des activités via Ollama AI"
+                disabled={false}
+                onPress={() => fetchActivities("ollama")}
             />
             <View>
                 <AppButton
-                    title="Créer une nouvelle activité"
+                    title="Créer une nouvelle activité manuellement"
+                    disabled={false}
                     onPress={() => setShowCreateModal(true)}
                 />
             </View>
@@ -188,10 +195,12 @@ export default function ActivitiesScreen() {
                                 {item.location && <Text>Lieu : {item.location}</Text>}
                                 <AppButton
                                     title="Ajouter à l'agenda Google"
+                                    disabled={false}
                                     onPress={() => handleAddToCalendar(item, 'google')}
                                 />
                                 <AppButton
                                     title="Ajouter à l'agenda local"
+                                    disabled={false}
                                     onPress={() => handleAddToCalendar(item, 'local')}
                                 />
                             </View>
@@ -243,10 +252,12 @@ export default function ActivitiesScreen() {
                         <View style={styles.buttonContainer}>
                             <AppButton
                                 title="Annuler"
+                                disabled={false}
                                 onPress={() => setShowPicker(false)}
                             />
                             <AppButton
                                 title="Confirmer"
+                                disabled={false}
                                 onPress={() => confirmAddEvent(startDate)}
                             />
                         </View>
@@ -301,6 +312,7 @@ export default function ActivitiesScreen() {
                         <View style={styles.buttonContainer}>
                             <AppButton
                                 title="Annuler"
+                                disabled={false}
                                 onPress={() => {
                                     setShowCreateModal(false);
                                     setNewActivity({
@@ -313,6 +325,7 @@ export default function ActivitiesScreen() {
                             />
                             <AppButton
                                 title="Créer"
+                                disabled={false}
                                 onPress={createActivity}
                             />
                         </View>
