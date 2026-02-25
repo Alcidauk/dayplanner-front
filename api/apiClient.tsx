@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 import {API_URL, PUBLIC_ENDPOINTS} from "@/constants/constants";
 import {getAccessToken, isTokenExpired} from "@/hooks/token";
 import {tokenRefreshService} from "@/services/tokenRefreshService";
@@ -16,9 +16,9 @@ export const authHeaders = (token: string | null) => ({
 });
 
 apiClient.interceptors.request.use(
-    async (config) => {
-        const isPublicEndpoint = PUBLIC_ENDPOINTS.some(
-            (endpoint) => config.url?.includes(endpoint)
+    async (config: any) => {
+        const isPublicEndpoint: boolean = PUBLIC_ENDPOINTS.some(
+            (endpoint: string) => config.url?.includes(endpoint)
         );
 
         if (isPublicEndpoint) {
@@ -46,8 +46,8 @@ apiClient.interceptors.request.use(
 );
 
 apiClient.interceptors.response.use(
-    (response) => response,
-    async (error) => {
+    (response: any) : any => response,
+    async (error: any) : Promise<any> => {
         const originalRequest = error.config;
 
         if (error.response?.status === 401 && !originalRequest._retry) {

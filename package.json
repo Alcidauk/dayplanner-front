@@ -19,7 +19,7 @@
     "@react-navigation/elements": "^2.6.3",
     "@react-navigation/material-top-tabs": "^7.4.11",
     "@react-navigation/native": "^7.1.8",
-    "axios": "^1.13.2",
+    "axios": "^1.13.5",
     "dunder-proto": "^1.0.1",
     "events": "^3.3.0",
     "expo": "~54.0.30",
