@@ -107,6 +107,7 @@ export default function TodayDashboard() {
                     googleEvents.map((e) => renderEvent(e))}
                 <AppButton
                     title="Voir mon agenda Google"
+                    disabled={false}
                     onPress={() => router.push("/google-calendar")}
                 />
             </View>
@@ -125,6 +126,7 @@ export default function TodayDashboard() {
                     localEvents.map((e) => renderEvent(e, true))}
                 <AppButton
                     title="Voir mon agenda local"
+                    disabled={false}
                     onPress={() => router.push("/local-calendar")}
                 />
             </View>
@@ -132,6 +134,7 @@ export default function TodayDashboard() {
             <View style={styles.buttonContainer}>
                 <AppButton
                     title="Ajouter une activité"
+                    disabled={false}
                     onPress={() => router.push("/activities")}
                 />
             </View>

@@ -36,7 +36,7 @@ export default function CalendarScreen() {
                 <>
             <FlatList
                 data={events}
-                keyExtractor={(item: any) => item.id}
+                keyExtractor={(item: CalendarEvent) => item.id}
                 renderItem={({ item }) => (
                     <View style={styles.card}>
                         <Text style={styles.cardTitle}>{item.title}</Text>

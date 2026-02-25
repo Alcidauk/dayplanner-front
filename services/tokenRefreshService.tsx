@@ -1,67 +1,88 @@
-import { getTokenData, storeTokens, clearTokens, isTokenExpired } from '@/hooks/token';
-import {authEmitter, handleErrorMessages} from '@/utils/utils';
-import {refreshToken} from "@/api/authApi";
-import {showAlert} from "@/utils/alertManager";
-import {TokenData} from "@/api/types";
+import { getTokenData, storeTokens, clearTokens } from '@/hooks/token';
+import { authEmitter, handleErrorMessages } from '@/utils/utils';
+import { refreshToken as refreshTokenApi } from "@/api/authApi";
+import { TokenData } from "@/api/types";
 
 class TokenRefreshService {
+
     private refreshTimer: number = 0;
     private isRefreshing = false;
 
     start() {
         console.log('Token refresh service started');
+        this.stop();
         this.scheduleNextRefresh();
     }
 
     stop() {
-        console.log('Token refresh service stopped');
         if (this.refreshTimer) {
             clearTimeout(this.refreshTimer);
             this.refreshTimer = 0;
         }
+        console.log('Token refresh service stopped');
     }
 
     private async scheduleNextRefresh() {
         const tokenData: TokenData | null = await getTokenData();
-        if (!tokenData) {
-            console.log('No token data, stopping refresh service');
+
+        if (!tokenData?.expires_at) {
+            console.log('No token data, stopping refresh scheduling');
             return;
         }
-        const now: number = Date.now();
-        const expiresAt: number = tokenData.expires_at;
-        const timeUntilExpiry: number = expiresAt - now;
-        const refreshBuffer: number = 5 * 60 * 1000;
-        const timeUntilRefresh: number = Math.max(0, timeUntilExpiry - refreshBuffer);
-        console.log(`Next refresh scheduled in ${Math.round(timeUntilRefresh / 1000)} seconds`);
+
+        const now = Date.now();
+        const expiresAt = tokenData.expires_at;
+        console.log('token expires at: ', expiresAt);
+        const refreshBuffer = 5 * 60 * 1000;
+
+        const timeUntilRefresh = expiresAt - now - refreshBuffer;
+
+        if (timeUntilRefresh <= 0) {
+            console.log('Token almost expired, refreshing now');
+            await this.refreshToken();
+            return;
+        }
+        console.log(`⏳ Next refresh in ${Math.round(timeUntilRefresh / 1000)} seconds`);
+
         this.refreshTimer = setTimeout(() => {
             this.refreshToken();
         }, timeUntilRefresh);
     }
 
     async refreshToken(): Promise<boolean> {
+
         if (this.isRefreshing) {
             console.log('Refresh already in progress');
             return false;
         }
+
         this.isRefreshing = true;
+
         try {
-            const tokenData: TokenData | null = await getTokenData();
+            const tokenData = await getTokenData();
+
             if (!tokenData?.refresh_token) {
-                console.error("Pas de refresh token disponible");
+                console.error("No refresh token available");
                 await this.handleRefreshFailure();
                 return false;
             }
+
             console.log('Refreshing access token...');
 
-            const response = await refreshToken(tokenData)
+            const response = await refreshTokenApi({
+                access_token: tokenData.access_token,
+                refresh_token: tokenData.refresh_token,
+                expires_at: tokenData.expires_at
+            });
             const { access_token, refresh_token, expires_in } = response.data;
+
             await storeTokens(access_token, refresh_token, expires_in);
-            console.log('✅ Token refreshed successfully');
+            console.log('Token refreshed successfully');
             this.scheduleNextRefresh();
             return true;
         } catch (error) {
-            let message: string = handleErrorMessages(error)
-            showAlert('error', "Erreur", message)
+            const message = handleErrorMessages(error);
+            console.error("Refresh failed:", message);
             await this.handleRefreshFailure();
             return false;
         } finally {
@@ -70,17 +91,11 @@ class TokenRefreshService {
     }
 
     private async handleRefreshFailure() {
+        console.log('Refresh failed → clearing session');
         await clearTokens();
         authEmitter.emit("authChanged");
         this.stop();
     }
-
-    async checkAndRefresh(): Promise<boolean> {
-        const expired: boolean = await isTokenExpired(300); // 5 minutes de buffer
-        if (expired) {
-            return await this.refreshToken();
-        }
-        return true;
-    }
 }
+
 export const tokenRefreshService = new TokenRefreshService();

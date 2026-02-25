@@ -29,7 +29,9 @@ export const login = async ({email, password}:LoginPayload) => {
 
 export const refreshToken = async (tokenData: TokenData) => {
     return await apiClient.post(`${API_URL}/auth/refresh`, {
+        access_token:tokenData.access_token,
         refresh_token: tokenData.refresh_token,
+        expires_at: tokenData.expires_at
     });
 }
 

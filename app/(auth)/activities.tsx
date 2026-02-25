@@ -5,7 +5,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import {addActivities, getActivitiesFromDB, getActivitiesRecommendations} from "@/api/activityApi";
 import {addEventToGoogleCalendar} from "@/api/calendarApi";
 import styles from "@/styles/styles";
-import {Activity} from "@/api/types";
+import {Activity, ActivityListResponse, CalendarEvent} from "@/api/types";
 import {addEventToLocalCalendar} from "@/utils/localCalendar";
 import AppButton from "@/components/app_button";
 import LoadingView from "@/components/loading_view";
@@ -147,7 +147,7 @@ export default function ActivitiesScreen() {
     useEffect(() => {
         const fetchActivitiesFromDB = async () => {
             try {
-                const DBactivities: any = await getActivitiesFromDB();
+                const DBactivities: Activity[] = await getActivitiesFromDB();
                 setActivitiesFromDB(DBactivities)
             }
             catch (error) {
