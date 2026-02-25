@@ -1,7 +1,6 @@
 import { API_URL } from "@/constants/constants";
 import {RegisterPayload, UserCreate, UserResponse} from "@/api/types";
 import {apiClient, authHeaders} from "@/api/apiClient";
-import axios from "axios";
 import {getAccessToken} from "@/hooks/token";
 import {showAlert} from "@/utils/alertManager";
 import {handleErrorMessages} from "@/utils/utils";
@@ -36,12 +35,7 @@ export const register = async ({name, surname, email, password}: RegisterPayload
         }, 0);
 
     } catch (error: unknown) {
-        if (axios.isAxiosError(error)) {
-            let message = handleErrorMessages(error)
-            showAlert("error", "Erreur", message);
-        } else {
-            let message = handleErrorMessages(error)
-            showAlert("error","Erreur", message);
-        }
+        let message = handleErrorMessages(error)
+        showAlert("error", "Erreur", message);
     }
 };
