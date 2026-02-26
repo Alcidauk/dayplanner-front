@@ -42,7 +42,7 @@ class TokenRefreshService {
             await this.refreshToken();
             return;
         }
-        console.log(`⏳ Next refresh in ${Math.round(timeUntilRefresh / 1000)} seconds`);
+        console.log(`Next refresh in ${Math.round(timeUntilRefresh / 1000)} seconds`);
 
         this.refreshTimer = setTimeout(() => {
             this.refreshToken();

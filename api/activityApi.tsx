@@ -30,3 +30,12 @@ export const addActivities = async (activity: Activity): Promise<Activity> => {
     );
     return response.data;
 }
+
+export const deleteActivity = async (activityId: number): Promise<void> => {
+    const token = await requireAuth();
+    const response = await apiClient.delete(
+        `/activity/delete_activity/${activityId}`,
+        authHeaders(token)
+    );
+    return response.data;
+}

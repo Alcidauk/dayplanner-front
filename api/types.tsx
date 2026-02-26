@@ -22,6 +22,7 @@ export interface Activity {
     description: string;
     location: string;
     duration: string;
+    source: "google" | "local" | "user";
 }
 
 export interface ActivityListResponse {
@@ -35,7 +36,7 @@ export interface CalendarEvent {
     start: string;
     end: string;
     location?: string;
-    source: "google" | "local";
+    source: "google" | "local" | "user";
 }
 
 export interface UserCreate {

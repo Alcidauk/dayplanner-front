@@ -2,7 +2,7 @@ import {useState, useEffect} from "react";
 import {View, Text, FlatList, Platform, Modal, TextInput}
     from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import {addActivities, getActivitiesFromDB, getActivitiesRecommendations} from "@/api/activityApi";
+import {addActivities, deleteActivity, getActivitiesFromDB, getActivitiesRecommendations} from "@/api/activityApi";
 import {addEventToGoogleCalendar} from "@/api/calendarApi";
 import styles from "@/styles/styles";
 import {Activity, ActivityListResponse, CalendarEvent} from "@/api/types";
@@ -65,7 +65,8 @@ export default function ActivitiesScreen() {
                 title: newActivity.title.trim(),
                 description: newActivity.description.trim(),
                 location: newActivity.location?.trim() || "",
-                duration: newActivity.duration || "1 heure"
+                duration: newActivity.duration || "1 heure",
+                source: "user"
             };
             setActivities(prev => [activityToAdd, ...prev]);
             try {
@@ -89,7 +90,18 @@ export default function ActivitiesScreen() {
             showAlert("error", "Erreur", message);
         }
     };
-
+    const deleteUserActivity = async (activityId: number) => {
+        try {
+            console.log("activityId:", activityId);
+            await deleteActivity(activityId);
+            setActivitiesFromDB(prev =>
+                prev.filter(activity => activity.id !== activityId)
+            );
+        } catch (error) {
+            let message: string = handleErrorMessages(error)
+            showAlert("error","Erreur suppression:", message);
+        }
+    }
     const confirmAddEvent = async (selectedStartDate: Date) => {
         if (!selectedActivity || !calendarTarget) {
             showAlert("error", "Erreur", "Infos manquantes");
@@ -203,6 +215,15 @@ export default function ActivitiesScreen() {
                                     disabled={false}
                                     onPress={() => handleAddToCalendar(item, 'local')}
                                 />
+                                {(item?.source == "user") ? (
+                                    <>
+                                        <AppButton
+                                            title="Supprimer l'activité"
+                                            disabled={false}
+                                            onPress={() => deleteUserActivity(item.id)}
+                                        />
+                                    </>
+                                ): ""}
                             </View>
                         )}
                     />

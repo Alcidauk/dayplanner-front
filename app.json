@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "dayplanner-front",
-    "slug": "dayplanner-front",
+    "name": "dayplanner",
+    "slug": "dayplanner",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/dayplanner_image.png",
-    "scheme": "dayplanner-front",
+    "scheme": "dayplanner",
     "platforms": [
       "ios",
       "android",
@@ -15,7 +15,7 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.dayplannerfront",
+      "bundleIdentifier": "com.anonymous.dayplanner",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
@@ -28,7 +28,7 @@
         "monochromeImage": "./assets/images/dayplanner_image.png"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.anonymous.dayplannerfront"
+      "package": "com.anonymous.dayplanner"
     },
     "web": {
       "output": "static",
