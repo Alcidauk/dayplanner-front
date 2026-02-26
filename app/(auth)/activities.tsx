@@ -97,6 +97,7 @@ export default function ActivitiesScreen() {
             setActivitiesFromDB(prev =>
                 prev.filter(activity => activity.id !== activityId)
             );
+            showAlert("success", "Succès", "Activité supprimée avec succès");
         } catch (error) {
             let message: string = handleErrorMessages(error)
             showAlert("error","Erreur suppression:", message);
