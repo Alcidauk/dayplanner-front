@@ -49,6 +49,7 @@ export default function RegisterScreen() {
 
             <AppButton
                 title={"Créer le compte"}
+                disabled={false}
                 onPress={() => register({ name, surname, email, password })}
             />
         </View>

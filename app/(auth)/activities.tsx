@@ -49,6 +49,17 @@ export default function ActivitiesScreen() {
         }
     };
 
+    const fetchActivitiesFromDB = async () => {
+        try {
+            const DBactivities: Activity[] = await getActivitiesFromDB();
+            setActivitiesFromDB(DBactivities)
+        }
+        catch (error) {
+            let message: string = handleErrorMessages(error)
+            showAlert("error", "Erreur", message)
+        }
+    }
+
     const createActivity = async () => {
         if (!newActivity.title?.trim()) {
             showAlert("error", "Erreur", "Le titre est requis");
@@ -158,16 +169,6 @@ export default function ActivitiesScreen() {
     };
 
     useEffect(() => {
-        const fetchActivitiesFromDB = async () => {
-            try {
-                const DBactivities: Activity[] = await getActivitiesFromDB();
-                setActivitiesFromDB(DBactivities)
-            }
-            catch (error) {
-                let message: string = handleErrorMessages(error)
-                showAlert("error", "Erreur", message)
-            }
-        }
         fetchActivitiesFromDB()
     }, []);
 

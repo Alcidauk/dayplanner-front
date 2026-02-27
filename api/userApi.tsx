@@ -3,7 +3,7 @@ import {RegisterPayload, UserCreate, UserResponse} from "@/api/types";
 import {apiClient, authHeaders} from "@/api/apiClient";
 import {getAccessToken} from "@/hooks/token";
 import {showAlert} from "@/utils/alertManager";
-import {handleErrorMessages} from "@/utils/utils";
+import {handleErrorMessages, redirectIndex} from "@/utils/utils";
 
 
 export const getCurrentUser = async () : Promise<UserResponse>  => {
@@ -33,6 +33,7 @@ export const register = async ({name, surname, email, password}: RegisterPayload
         setTimeout(() => {
             showAlert("success","Succès", `Compte créé pour ${user.email}`);
         }, 0);
+        redirectIndex()
 
     } catch (error: unknown) {
         let message = handleErrorMessages(error)
