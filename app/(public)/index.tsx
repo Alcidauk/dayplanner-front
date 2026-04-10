@@ -11,7 +11,7 @@ export default function Index() {
 
     return (
             <View style={styles.container}>
-                <Text style={styles.title}>DayPlanner Front</Text>
+                <Text style={styles.title}>DayPlanner</Text>
                 <AppButton title="Enregistrement" onPress={() => router.push("/register")} />
                 <Text style={styles.title}>Connexion</Text>
                 <TextInput
